@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { userLoggedIn } from './redux/user/actions'
-import { GlobalState } from './redux/store'
+import { userLoggedIn } from '../redux/user/actions'
+import { GlobalState } from '../redux/store'
 
 import querystring from 'querystring'
 
-import spotify from './spotify'
+import spotify from '../spotify'
 
 class Login extends React.Component<Props> {
 

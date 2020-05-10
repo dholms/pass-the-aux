@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { GlobalState } from './redux/store'
 import { startListening } from './redux/track/actions'
 
-import Login from './Login'
+import Login from './components/Login'
 import spotify from './spotify'
 import { Track } from './spotify/types'
 
