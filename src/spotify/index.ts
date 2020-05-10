@@ -7,7 +7,6 @@ import { TrackAction, trackChanged, trackUpdate } from '../redux/track/actions'
 const BASE_URL = 'https://api.spotify.com/v1/me'
 const AUTH_URL = 'https://accounts.spotify.com/authorize?'
 const CLIENT_ID = "94c3aab0549f494c80c8585d19b6af2f"
-const CLIENT_SECRET = "a207a1a08e6a49388bdf9457f2269456"
 const REDIRECT_URI = "http://localhost:3000/callback"
 
 export const loginRedirect = () => {

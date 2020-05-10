@@ -24,28 +24,27 @@ class App extends React.Component<Props, State> {
 
   render() {
     const { token, currTrack, progress, paused } = this.props
-    return <Player />
     // return <Player />
-    // if(!token){
-    //   return <Login />
-    // }
-    // return (
-    //   <div>
-    //     <h1>Currently Listening</h1>
-    //     {currTrack === null && 
-    //       <h2>None</h2>
-    //     }
-    //     {currTrack !== null &&
-    //       <div>
-    //         <img src={currTrack.img} />
-    //         <h2>{currTrack.name}</h2>
-    //         <h4>{currTrack.artist} - {currTrack.album}</h4>
-    //         <h6>{ paused ? "Paused" : "Playing" }</h6>
-    //         <h6>progress: { progress } </h6>
-    //       </div>
-    //     }
-    //   </div>
-    // )
+    if(!token){
+      return <Login />
+    }
+    return (
+      <div>
+        <h1>Currently Listening</h1>
+        {currTrack === null && 
+          <h2>None</h2>
+        }
+        {currTrack !== null &&
+          <div>
+            <img src={currTrack.img} />
+            <h2>{currTrack.name}</h2>
+            <h4>{currTrack.artist} - {currTrack.album}</h4>
+            <h6>{ paused ? "Paused" : "Playing" }</h6>
+            <h6>progress: { progress } </h6>
+          </div>
+        }
+      </div>
+    )
   }
 }
 
