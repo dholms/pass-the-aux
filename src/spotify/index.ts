@@ -1,8 +1,7 @@
 import axios from 'axios'
-import querystring, { stringify } from 'querystring'
-import { EventEmitter } from 'events'
+import querystring from 'querystring'
 import { Track, PlaybackInfo } from './types'
-import { TrackAction, trackChanged, trackUpdate } from '../redux/track/actions'
+import { TrackAction, trackUpdate } from '../redux/track/actions'
 
 const BASE_URL = 'https://api.spotify.com/v1/me'
 const AUTH_URL = 'https://accounts.spotify.com/authorize?'
@@ -13,28 +12,28 @@ export const loginRedirect = () => {
   const url = AUTH_URL + querystring.stringify({
     response_type: 'token',
     client_id: CLIENT_ID,
-    // scope: ['user-read-currently-playing', 'user-read-playback-state'],
-    scope: 'user-read-playback-state',
+    // scope: ['user-read-playback-state', 'user-modify-playback-state'],
+    scope: 'user-read-playback-state user-modify-playback-state',
     redirect_uri: REDIRECT_URI,
   })
   window.location.replace(url)
-}
-
-interface Artist {
-  name: string
 }
 
 const stringifyArtists = (artists: {name: string}[]) => {
   return artists.map(a => a.name).join(',')
 }
 
-export const getCurr = async (code: string): Promise<PlaybackInfo> => {
+const makeHeader = (token: string) => {
+  return { 'Authorization': 'Bearer ' + token }
+}
+
+export const getCurr = async (token: string): Promise<PlaybackInfo> => {
   const resp = await axios.get(`${BASE_URL}/player/currently-playing`, {
-    headers: { 'Authorization': 'Bearer ' + code }
+    headers: makeHeader(token)
   })
   const data = resp.data
   const { uri, name, artists, album } = data.item
-  console.log(resp.data)
+  console.log(uri)
   return {
     paused: !data.is_playing,
     progress: data.progress_ms,
@@ -48,18 +47,22 @@ export const getCurr = async (code: string): Promise<PlaybackInfo> => {
   }
 }
 
-export const listen = (token: string) => {
-  return new SpotifyListener(token)
+export const changeTrack = async (token: string, uri: string, position = 0) => {
+  await axios.put(`${BASE_URL}/player/play`, {
+    uris: [uri],
+    position
+  }, {
+    headers: makeHeader(token)
+  })
 }
 
-export class SpotifyListener extends EventEmitter {
+export class SpotifyListener {
 
   token: string
   curr: Track | null
   running: boolean
 
   constructor(token: string){
-    super()
     this.token = token
     this.curr = null
     this.running = false
@@ -89,5 +92,5 @@ const wait = (time: number) => {
 export default {
   loginRedirect,
   getCurr,
-  listen,
+  changeTrack,
 }

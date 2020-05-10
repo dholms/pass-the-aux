@@ -1,7 +1,7 @@
 import { createLogic } from 'redux-logic'
-import { START_LISTENING, StartListeningAction, TrackAction } from './actions'
+import { START_LISTENING } from './actions'
 import { GlobalState } from '../store'
-import { SpotifyListener, listen } from '../../spotify'
+import { SpotifyListener } from '../../spotify'
 
 interface ProcessOpts {
   getState: () => GlobalState
@@ -19,7 +19,6 @@ const startListeningLogic = createLogic({
     }
     const listener = new SpotifyListener(token)
     for await (action of listener.start()){
-      console.log("ACTION: ", action)
       dispatch(action)
     }
   }

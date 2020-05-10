@@ -1,4 +1,4 @@
-import { TrackAction, START_LISTENING, TRACK_CHANGED, TRACK_UPDATE } from './actions'
+import { TrackAction, TRACK_CHANGED, TRACK_UPDATE } from './actions'
 import { Track } from '../../spotify/types'
 
 export type TrackState = {
@@ -20,7 +20,7 @@ export default (state = defaultState, action: TrackAction) => {
       const { track, progress, paused } = action.payload
       return {
         ...state,
-        curr: action.payload.track,
+        curr: track,
         progress,
         paused
       }

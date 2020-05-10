@@ -5,8 +5,8 @@ import { GlobalState } from './redux/store'
 import { startListening } from './redux/track/actions'
 
 import Login from './Login'
+import spotify from './spotify'
 import { Track } from './spotify/types'
-import Player from './Player'
 
 class App extends React.Component<Props, State> {
 
@@ -22,21 +22,28 @@ class App extends React.Component<Props, State> {
     }
   }
 
+  resetTrack = () => {
+    const uri = this.props.currTrack?.uri
+    if(this.props.token && uri){
+      spotify.changeTrack(this.props.token, uri, 0)
+    }
+  }
+
   render() {
     const { token, currTrack, progress, paused } = this.props
-    // return <Player />
     if(!token){
       return <Login />
     }
     return (
       <div>
         <h1>Currently Listening</h1>
+        <button onClick={this.resetTrack}>Reset Track</button>
         {currTrack === null && 
           <h2>None</h2>
         }
         {currTrack !== null &&
           <div>
-            <img src={currTrack.img} />
+            <img src={currTrack.img} alt="album art" />
             <h2>{currTrack.name}</h2>
             <h4>{currTrack.artist} - {currTrack.album}</h4>
             <h6>{ paused ? "Paused" : "Playing" }</h6>
