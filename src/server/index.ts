@@ -23,7 +23,7 @@ io.on('connection', (client: Socket) => {
     try{
       const room = new Room(roomname, username, client, () => deleteRoom(roomname))
       rooms[roomname] = room
-      client.emit('create-room-success', roomname)
+      client.emit('create-room-success', room.data())
     }catch(err){
       client.emit('create-room-failed', err.toString())
     }
@@ -34,7 +34,7 @@ io.on('connection', (client: Socket) => {
     const room = rooms[roomname]
     try {
       room.addMember(username, client)
-      client.emit('connect-to-room-success', roomname)
+      client.emit('connect-to-room-success', room.data())
     } catch(err) {
       client.emit('connect-to-room-failed', err.toString())
     }

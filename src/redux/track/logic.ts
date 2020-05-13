@@ -1,25 +1,20 @@
 import { createLogic } from 'redux-logic'
-import { START_LISTENING } from './actions'
-import { GlobalState } from '../store'
+import { START_LISTENING, trackUpdate } from './actions'
 import { SpotifyListener } from '../../spotify'
-
-interface ProcessOpts {
-  getState: () => GlobalState
-  action: any
-}
+import { ProcessOpts } from '../types'
 
 const startListeningLogic = createLogic({
   type: START_LISTENING,
   warnTimeout: 0,
-  async process({ getState, action}: ProcessOpts, dispatch, done) {
+  async process({ getState, action }: ProcessOpts, dispatch, done) {
     const state = getState()
     const token = state.user.token
     if(!token){
       throw new Error("User not logged in")
     }
     const listener = new SpotifyListener(token)
-    for await (action of listener.start()){
-      dispatch(action)
+    for await (const info of listener.start()){
+      dispatch(trackUpdate(info))
     }
   }
 })

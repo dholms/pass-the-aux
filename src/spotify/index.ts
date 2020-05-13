@@ -1,7 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
 import { Track, PlaybackInfo } from './types'
-import { TrackAction, trackUpdate } from '../redux/track/actions'
 
 const BASE_URL = 'https://api.spotify.com/v1/me'
 const AUTH_URL = 'https://accounts.spotify.com/authorize?'
@@ -68,12 +67,12 @@ export class SpotifyListener {
     this.running = false
   }
 
-  async *start(): AsyncIterable<TrackAction> {
+  async *start(): AsyncIterable<PlaybackInfo> {
     this.running = true
 
     while(this.running) {
       const curr = await getCurr(this.token)
-      yield trackUpdate(curr)
+      yield curr
       await wait(5000)
     }
   }

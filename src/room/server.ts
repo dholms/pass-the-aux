@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io'
+import { RoomData } from './types'
 
 export default class RoomServer {
   
@@ -53,6 +54,14 @@ export default class RoomServer {
     Object.values(this.clientById).forEach(c => {
       c.emit(msg, data)
     })
+  }
+
+  data(): RoomData {
+    return {
+      name: this.name,
+      members: Object.values(this.userById),
+      leader: this.leader
+    }
   }
 }
 

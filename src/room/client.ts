@@ -1,41 +1,46 @@
 import io from 'socket.io-client'
 import { PlaybackInfo } from "../spotify/types"
+import { RoomData } from './types'
 
 const SERVER_ADDR = 'http://localhost:3001'
 
 export default class RoomClient {
 
-  roomname: string
-  username: string
   socket: SocketIOClient.Socket
+  name: string
+  members: string[]
+  leader: string
   onTrackUpdate: ((data: PlaybackInfo) => void) | null = null
   onMemberAdded: ((name: string) => void) | null = null
   onMemberRemoved: ((name: string) => void) | null = null
 
-  constructor(roomname: string, username: string, socket: SocketIOClient.Socket){
-    this.roomname = roomname
-    this.username = username
+  constructor(name: string, members: string[], leader: string, socket: SocketIOClient.Socket){
+    this.name = name
+    this.members = members
+    this.leader = leader
     this.socket = socket
     this.respondToUpdates()
   }
 
-  static async create(roomname: string, username: string) {
+  static async create(roomname: string, username: string): Promise<RoomClient> {
     return new Promise((resolve, reject) => {
       const socket = io(SERVER_ADDR)
       socket.emit('create-room', { roomname, username })
-      socket.on('create-room-success', () => {
-        resolve(new RoomClient(roomname, username, socket))
+      socket.on('create-room-success', (data: RoomData) => {
+        const { members, leader }  = data
+        resolve(new RoomClient(roomname, members, leader, socket))
       })
       socket.on('create-room-failed', reject)
     })
   }
 
-  static async connect(roomname: string, username: string) {
+  static async connect(roomname: string, username: string): Promise<RoomClient> {
     return new Promise((resolve, reject) => {
       const socket = io(SERVER_ADDR)
       socket.emit('connect-to-room', { roomname, username })
-      socket.on('connect-to-room-success', () => {
-        resolve(new RoomClient(roomname, username, socket))
+      socket.on('connect-to-room-success', (data: RoomData) => {
+        const { members, leader }  = data
+        resolve(new RoomClient(roomname, members, leader, socket))
       })
       socket.on('connect-to-room-failed', reject)
     })

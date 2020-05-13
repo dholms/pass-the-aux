@@ -8,3 +8,9 @@ export interface ConnectToRoomMsg {
   roomname: string
 }
 
+export interface RoomData {
+  name: string
+  members: string[]
+  leader: string
+}
+

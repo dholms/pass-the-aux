@@ -3,17 +3,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { GlobalState } from './redux/store'
 import { startListening } from './redux/track/actions'
+import { createRoom, connectToRoom } from './redux/room/actions'
 
 import Login from './components/Login'
 import room from './room'
 import spotify from './spotify'
 import { Track } from './spotify/types'
-
-import io from 'socket.io-client'
-const socket = io('http://localhost:3001')
-
-
-
+import MemberList from './components/MemberList'
 
 class App extends React.Component<Props, State> {
 
@@ -37,35 +33,19 @@ class App extends React.Component<Props, State> {
   }
 
   create = () => {
-    room.create('room', 'alice')
+    this.props.createRoom('room', 'alice')
   }
 
   connect = () => {
-    room.connect('room', 'bob')
+    this.props.connectToRoom('room', 'bob')
   }
-
-  trackUpdate = () => {
-    room.trackUpdate({
-      paused: false,
-      progress: 420,
-      track: {
-        uri: 'uri',
-        name: 'bob',
-        artist: 'blah',
-        album: 'alb',
-        img: 'img link'
-      }
-    })
-  }
-
-
 
   render() {
     return (
       <div>
         <button onClick={this.create}>Create</button>
         <button onClick={this.connect}>Connect</button>
-        <button onClick={this.trackUpdate}>Track Update</button>
+        <MemberList />
       </div>
     )
     // const { token, currTrack, progress, paused } = this.props
@@ -99,6 +79,8 @@ interface Props {
   progress: number | null
   paused: boolean
   startListening: typeof startListening
+  createRoom: typeof createRoom
+  connectToRoom: typeof connectToRoom
 }
 
 interface State { }
@@ -111,7 +93,9 @@ const mapStateToProps = (state: GlobalState) => ({
 })
 
 const mapDispatchToProps = {
-  startListening
+  startListening,
+  createRoom,
+  connectToRoom
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
