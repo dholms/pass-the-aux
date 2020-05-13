@@ -10,6 +10,7 @@ import spotify from '../spotify'
 class Login extends React.Component<Props> {
 
   componentWillMount() {
+    // Parse spotify query string that includes token.
     if(window.location.pathname.indexOf('callback') > -1){
       const qs = querystring.parse(window.location.hash.slice(1))
       if(qs.access_token && typeof qs.access_token === 'string') {
