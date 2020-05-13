@@ -1,6 +1,5 @@
 export interface CreateRoomMsg {
   username: string
-  roomname: string
 }
 
 export interface ConnectToRoomMsg {

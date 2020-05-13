@@ -1,63 +1,49 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 
 import { connect } from 'react-redux'
 import { GlobalState } from './redux/store'
-import { startListening } from './redux/track/actions'
 import { createRoom, connectToRoom } from './redux/room/actions'
 
 import Login from './components/Login'
-import spotify from './spotify'
-import { Track } from './spotify/types'
-import MemberList from './components/MemberList'
+import Player from './components/Player'
 
 class App extends React.Component<Props, State> {
 
-  componentDidUpdate(prevProps: Props){
-    if(this.props.token !== null && this.props.token !== prevProps.token) {
-      this.props.startListening()
-    }
+  state = {
+    roomname: ''
   }
 
-  componentDidMount(){
-    if(this.props.token){
-      this.props.startListening()
-    }
+  createRoom = () => {
+    this.props.createRoom()
   }
 
-  resetTrack = () => {
-    const uri = this.props.currTrack?.uri
-    if(this.props.token && uri){
-      spotify.changeTrack(this.props.token, uri, 0)
-    }
+  inputChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    const roomname = event.target.value
+    this.setState({ roomname })
+  }
+
+  connect = () => {
+    this.props.connectToRoom(this.state.roomname)
   }
   
   render() {
-    const { token, currTrack, progress, paused } = this.props
+    const { token, roomname } = this.props
     if(!token){
-      return (
-        <div>
-          <Login />
-          <MemberList />
-        </div>
-      )
+      return <Login />
+    }
+    if(roomname !== null){
+      return <Player />
     }
     return (
       <div>
-        <h1>Currently Listening</h1>
-        <button onClick={this.resetTrack}>Reset Track</button>
-        {currTrack === null && 
-          <h2>None</h2>
-        }
-        {currTrack !== null &&
-          <div>
-            <img src={currTrack.img} alt="album art" />
-            <h2>{currTrack.name}</h2>
-            <h4>{currTrack.artist} - {currTrack.album}</h4>
-            <h6>{ paused ? "Paused" : "Playing" }</h6>
-            <h6>progress: { progress } </h6>
-          </div>
-        }
-        <MemberList />
+        <button onClick={this.props.createRoom}>Create Room</button>
+        <br />
+        <input 
+          onChange={this.inputChanged}
+          value={this.state.roomname}
+          placeholder='room'
+        />
+        <button onClick={this.connect}>Join</button>
       </div>
     )
   }
@@ -65,25 +51,21 @@ class App extends React.Component<Props, State> {
 
 interface Props {
   token: string | null
-  currTrack: Track | null
-  progress: number | null
-  paused: boolean
-  startListening: typeof startListening
+  roomname: string  | null
+  createRoom: typeof createRoom
+  connectToRoom: typeof connectToRoom
 }
 
 interface State { }
 
 const mapStateToProps = (state: GlobalState) => ({
   token: state.user.token,
-  currTrack: state.track.curr,
-  progress: state.track.progress,
-  paused: state.track.paused
+  roomname: state.room.name,
 })
 
 const mapDispatchToProps = {
-  startListening,
   createRoom,
-  connectToRoom
+  connectToRoom,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

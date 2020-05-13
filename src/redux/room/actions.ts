@@ -36,33 +36,25 @@ export const memberRemoved = (name: string): MemberRemovedAction => ({
 
 interface CreateRoomAction {
   type: 'CREATE_ROOM'
-  payload: {
-    roomname: string
-    username: string
-  }
+  payload: { }
 }
 
-export const createRoom = (roomname: string, username: string): CreateRoomAction => ({
+export const createRoom = (): CreateRoomAction => ({
   type: CREATE_ROOM,
-  payload: {
-    roomname,
-    username
-  }
+  payload: { }
 })
 
 interface ConnectToRoomAction {
   type: 'CONNECT_TO_ROOM'
   payload: {
     roomname: string
-    username: string
   }
 }
 
-export const connectToRoom = (roomname: string, username: string): ConnectToRoomAction => ({
+export const connectToRoom = (roomname: string): ConnectToRoomAction => ({
   type: CONNECT_TO_ROOM,
   payload: {
-    roomname,
-    username
+    roomname
   }
 })
 

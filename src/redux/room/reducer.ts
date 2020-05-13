@@ -1,9 +1,12 @@
 import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM } from './actions'
+import RoomClient from '../../room/client'
 
 export type RoomState = {
+  userId: string | null
   name: string | null
   members: string[]
   leader: string | null
+  room: RoomClient
 }
 
 export const defaultState = {
@@ -16,12 +19,16 @@ export default (state = defaultState, action: RoomAction) => {
   switch(action.type) {
 
     case JOINED_ROOM:
-      const { members, leader, name } = action.payload.room
+      const room = action.payload.room
+      const { members, leader, name, socket } = room
+      const userId = socket.id
       return {
         ...state,
+        userId,
         name,
         members,
-        leader
+        leader,
+        room
       }
 
     case MEMBER_ADDED:

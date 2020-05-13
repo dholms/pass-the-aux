@@ -12,14 +12,28 @@ const deleteRoom = (roomname: string) => {
   delete rooms[roomname]
 }
 
+const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+const genId = () => {
+  let id = ''
+  for(let i=0; i < 5; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return id
+}
+const uniqueId = () => {
+  while(true){
+    const id = genId()
+    if(rooms[id] === undefined){
+      return id
+    }
+  }
+}
+
 io.on('connection', (client: Socket) => {
 
   client.on('create-room', (data: CreateRoomMsg) => {
-    const { username, roomname } = data
-    if(rooms[roomname]){
-      client.emit('create-room-failed', 'Room already exists')
-      return
-    }
+    const { username } = data
+    const roomname = uniqueId()
     try{
       const room = new Room(roomname, username, client, () => deleteRoom(roomname))
       rooms[roomname] = room

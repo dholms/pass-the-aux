@@ -22,13 +22,13 @@ export default class RoomClient {
     this.respondToUpdates()
   }
 
-  static async create(roomname: string, username: string): Promise<RoomClient> {
+  static async create(username: string): Promise<RoomClient> {
     return new Promise((resolve, reject) => {
       const socket = io(SERVER_ADDR)
-      socket.emit('create-room', { roomname, username })
+      socket.emit('create-room', { username })
       socket.on('create-room-success', (data: RoomData) => {
-        const { members, leader }  = data
-        resolve(new RoomClient(roomname, members, leader, socket))
+        const { name, members, leader } = data
+        resolve(new RoomClient(name, members, leader, socket))
       })
       socket.on('create-room-failed', reject)
     })
@@ -39,11 +39,15 @@ export default class RoomClient {
       const socket = io(SERVER_ADDR)
       socket.emit('connect-to-room', { roomname, username })
       socket.on('connect-to-room-success', (data: RoomData) => {
-        const { members, leader }  = data
-        resolve(new RoomClient(roomname, members, leader, socket))
+        const { name, members, leader }  = data
+        resolve(new RoomClient(name, members, leader, socket))
       })
       socket.on('connect-to-room-failed', reject)
     })
+  }
+
+  updateTrack(data: PlaybackInfo) {
+    this.socket.emit('track-update', data)
   }
 
   respondToUpdates() {
