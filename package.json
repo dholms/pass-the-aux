@@ -11,6 +11,8 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.8",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "axios": "^0.19.2",
     "borc": "^2.1.2",
     "get-ipfs": "^1.2.0",
@@ -24,10 +26,13 @@
     "react-spotify-web-playback": "^0.6.0",
     "redux": "^4.0.5",
     "redux-logic": "^3.0.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "typescript": "~3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -46,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "tsc-watch": "^4.2.3"
   }
 }
