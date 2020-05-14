@@ -5,11 +5,10 @@ import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { GlobalState } from '../redux/store'
 import { createRoom, connectToRoom } from '../redux/room/actions'
 
-import Container from '@material-ui/core/Container'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 
-class JoinRoom extends React.Component<Props, State> {
+class RoomButtons extends React.Component<Props, State> {
 
   state = {
     roomname: ''
@@ -30,19 +29,33 @@ class JoinRoom extends React.Component<Props, State> {
   }
   
   render() {
+    const { classes } = this.props
     return (
-      <Container>
-        <Button onClick={this.props.createRoom}>Create Room</Button>
-        <br />
-        <form onSubmit={this.connect}>
+      <div className={classes.buttons}>
+        <Button
+          onClick={this.props.createRoom}
+          variant='contained'
+          color='primary'
+        >
+          Create Room
+        </Button>
+        <Typography variant='h6' className={classes.or}>
+          ~ Or ~
+        </Typography>
+        <form onSubmit={this.connect} className={classes.form}>
           <input 
             onChange={this.inputChanged}
             value={this.state.roomname}
-            placeholder='room'
+            placeholder='Room name'
           />
-          <Button type='submit'>Join</Button>
+          <Button 
+            type='submit'
+            variant='contained'
+          >
+            Join
+          </Button>
         </form>
-      </Container>
+      </div>
     )
   }
 }
@@ -51,6 +64,7 @@ interface Props {
   roomname: string  | null
   createRoom: typeof createRoom
   connectToRoom: typeof connectToRoom
+  classes: any
 }
 
 interface State { 
@@ -69,24 +83,24 @@ const mapDispatchToProps = {
 
 const styles = (theme: Theme) =>
   createStyles({
-    header: {
-      textAlign: 'center',
-      marginTop: 128,
-      marginBottom: 64
-    },
-    container: {
+    buttons: {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      justifyContent: 'space-between',
     },
-    spotifyButton: {
-      color: '#FFF',
-      borderRadius: 32,
-      fontSize: 18,
-      padding: '16px 32px'
+    or: {
+      margin: 16,
+      textAlign: 'center'
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      '& input': {
+        marginBottom: 16
+      }
     }
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(JoinRoom)
+  withStyles(styles)(RoomButtons)
 )

@@ -6,14 +6,11 @@ import { userLoggedIn } from '../redux/user/actions'
 import { GlobalState } from '../redux/store'
 
 import querystring from 'querystring'
-
 import spotify from '../spotify'
 
-import Container from '@material-ui/core/Container'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
 
-class Login extends React.Component<Props> {
+class LoginButton extends React.Component<Props> {
 
   componentWillMount() {
     if(window.location.pathname.indexOf('callback') > -1){
@@ -32,19 +29,14 @@ class Login extends React.Component<Props> {
     const { classes } = this.props
     if(this.props.loggedIn) return null
     return (
-      <Container className={classes.container}>
-        <Typography variant="h1" className={classes.header}>
-          Pass the Aux
-        </Typography>
-        <Button 
-          onClick={this.promptLogin}
-          className={classes.spotifyButton}
-          color='secondary'
-          variant='contained'
-        >
-          Login with Spotify
-        </Button>
-      </Container>
+      <Button 
+        onClick={this.promptLogin}
+        className={classes.spotifyButton}
+        color='secondary'
+        variant='contained'
+      >
+        Login with Spotify
+      </Button>
     )
   }
 }
@@ -66,16 +58,6 @@ const mapDispatchToProps = {
 
 const styles = (theme: Theme) =>
   createStyles({
-    header: {
-      textAlign: 'center',
-      marginTop: 128,
-      marginBottom: 64
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    },
     spotifyButton: {
       color: '#FFF',
       borderRadius: 32,
@@ -85,5 +67,5 @@ const styles = (theme: Theme) =>
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(Login)
+  withStyles(styles)(LoginButton)
 )
