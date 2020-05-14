@@ -42,6 +42,10 @@ export default class RoomServer {
   watchClient(client: Socket) {
     const id = client.id
 
+    client.on('disconnect', () => {
+      this.removeMember(id)
+    })
+
     client.on('track-update', (data) => {
       console.log('track update')
       if(id === this.leader) {
