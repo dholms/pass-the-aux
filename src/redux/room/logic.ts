@@ -38,7 +38,6 @@ const joinedRoomLogic = createLogic({
     console.log('joined room')
     const { room } = action.payload
     room.onTrackUpdate = (data: PlaybackInfo) => {
-      console.log('data: ', data)
       const roomState = getState().room
       if(roomState.userId !== roomState.leader){
         dispatch(updateTrack(data))

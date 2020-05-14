@@ -13,17 +13,13 @@ class Player extends React.Component<Props, State> {
   resetTrack = () => {
     const track = this.props.currTrack
     const { progress, paused } = this.props
-    if( progress && track){
+    if(progress && track){
       this.props.updateTrack({
         progress,
         paused,
         track
       })
     }
-    // const uri = this.props.currTrack?.uri
-    // if(this.props.token && uri){
-    //   spotify.changeTrack(this.props.token, uri, 0)
-    // }
   }
 
   render() {

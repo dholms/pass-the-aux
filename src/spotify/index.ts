@@ -11,7 +11,6 @@ export const loginRedirect = () => {
   const url = AUTH_URL + querystring.stringify({
     response_type: 'token',
     client_id: CLIENT_ID,
-    // scope: ['user-read-playback-state', 'user-modify-playback-state'],
     scope: 'user-read-playback-state user-modify-playback-state',
     redirect_uri: REDIRECT_URI,
   })
@@ -26,16 +25,18 @@ const makeHeader = (token: string) => {
   return { 'Authorization': 'Bearer ' + token }
 }
 
-export const getCurr = async (token: string): Promise<PlaybackInfo> => {
+export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
   const resp = await axios.get(`${BASE_URL}/player/currently-playing`, {
     headers: makeHeader(token)
   })
-  const data = resp.data
-  const { uri, name, artists, album } = data.item
-  console.log(uri)
+  const { item, is_playing, progress_ms } = resp?.data || {}
+  if(!item){
+    return null
+  }
+  const { uri, name, artists, album } = item
   return {
-    paused: !data.is_playing,
-    progress: data.progress_ms,
+    paused: !is_playing,
+    progress: progress_ms,
     track: {
       uri,
       name,
@@ -49,7 +50,7 @@ export const getCurr = async (token: string): Promise<PlaybackInfo> => {
 export const changeTrack = async (token: string, uri: string, position = 0) => {
   await axios.put(`${BASE_URL}/player/play`, {
     uris: [uri],
-    position
+    position_ms: position
   }, {
     headers: makeHeader(token)
   })
@@ -67,7 +68,7 @@ export class SpotifyListener {
     this.running = false
   }
 
-  async *start(): AsyncIterable<PlaybackInfo> {
+  async *start(): AsyncIterable<PlaybackInfo | null> {
     this.running = true
 
     while(this.running) {
