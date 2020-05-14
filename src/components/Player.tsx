@@ -1,44 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+
 import { GlobalState } from '../redux/store'
 import { updateTrack } from '../redux/track/actions'
 
 import { Track } from '../spotify/types'
 
+import Typography from '@material-ui/core/Typography'
+
 import MemberList from './MemberList'
 
 class Player extends React.Component<Props, State> {
 
-
-  resetTrack = () => {
-    const track = this.props.currTrack
-    const { progress, paused } = this.props
-    if(progress && track){
-      this.props.updateTrack({
-        progress,
-        paused,
-        track
-      })
-    }
-  }
-
   render() {
-    const { currTrack, roomname, paused, progress } = this.props
+    const { track, classes } = this.props
     return (
-      <div>
-        <h1>Currently Listening</h1>
-        <h2>Room: {roomname}</h2>
-        <button onClick={this.resetTrack}>Reset Track</button>
-        {currTrack === null && 
+      <div className={classes.main}>
+        {track === null && 
           <h2>None</h2>
         }
-        {currTrack !== null &&
-          <div>
-            <img src={currTrack.img} alt="album art" />
-            <h2>{currTrack.name}</h2>
-            <h4>{currTrack.artist} - {currTrack.album}</h4>
-            <h6>{ paused ? "Paused" : "Playing" }</h6>
-            <h6>progress: { progress } </h6>
+        {track !== null &&
+          <div className={classes.trackInfo}>
+            <img src={track.img} alt="album art" className={classes.img} />
+            <Typography><strong>{track.name}</strong></Typography>
+            <Typography><em>{track.artist} - {track.album}</em></Typography>
           </div>
         }
         <MemberList />
@@ -49,18 +35,17 @@ class Player extends React.Component<Props, State> {
 }
 
 interface Props {
-  currTrack: Track | null
-  roomname: string | null
+  track: Track | null
   progress: number | null,
   paused: boolean,
   updateTrack: typeof updateTrack
+  classes: any
 }
 
 interface State { }
 
 const mapStateToProps = (state: GlobalState) => ({
-  currTrack: state.track.curr,
-  roomname: state.room.name,
+  track: state.track.curr,
   progress: state.track.progress,
   paused: state.track.paused,
 })
@@ -69,4 +54,28 @@ const mapDispatchToProps = {
   updateTrack,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Player)
+const styles = (theme: Theme) =>
+  createStyles({
+    main: {
+      display: 'flex',
+      flexDirection: 'row',
+      '& div': {
+        marginLeft: 16,
+        marginRight: 16
+
+      }
+    },
+    trackInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+
+    },
+    img: {
+      width: 450
+    }
+  })
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(Player)
+)

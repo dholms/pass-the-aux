@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
   createStyles({
     header: {
       textAlign: 'center',
-      marginTop: 128,
+      marginTop: 64,
       marginBottom: 64
     },
     container: {

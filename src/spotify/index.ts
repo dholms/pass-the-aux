@@ -8,7 +8,7 @@ const CLIENT_ID = "94c3aab0549f494c80c8585d19b6af2f"
 const REDIRECT_URI = "http://localhost:3000/callback"
 
 export const POLL_INTERVAL = 3000
-export const DEBOUNCE_RANGE = 6000
+export const DEBOUNCE_RANGE = 3000
 
 export const loginRedirect = () => {
   const url = AUTH_URL + querystring.stringify({
