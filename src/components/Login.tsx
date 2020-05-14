@@ -1,11 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+
 import { userLoggedIn } from '../redux/user/actions'
 import { GlobalState } from '../redux/store'
 
 import querystring from 'querystring'
 
 import spotify from '../spotify'
+
+import Container from '@material-ui/core/Container'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 class Login extends React.Component<Props> {
 
@@ -24,11 +30,22 @@ class Login extends React.Component<Props> {
   }
 
   render() {
-    if(this.props.loggedIn){
-      return null
-    }
+    const { classes } = this.props
+    if(this.props.loggedIn) return null
     return (
-      <button onClick={this.promptLogin}>Login with Spotify</button>
+      <Container className={classes.container}>
+        <Typography variant="h1" className={classes.header}>
+          Pass the Aux
+        </Typography>
+        <Button 
+          onClick={this.promptLogin}
+          className={classes.spotifyButton}
+          color='secondary'
+          variant='contained'
+        >
+          Login with Spotify
+        </Button>
+      </Container>
     )
   }
 }
@@ -36,6 +53,7 @@ class Login extends React.Component<Props> {
 interface Props {
   loggedIn: boolean
   userLoggedIn: typeof userLoggedIn
+  classes: any
 }
 
 const mapStateToProps = (state: GlobalState) => ({
@@ -46,4 +64,27 @@ const mapDispatchToProps = {
   userLoggedIn
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+
+const styles = (theme: Theme) =>
+  createStyles({
+    header: {
+      textAlign: 'center',
+      marginTop: 128,
+      marginBottom: 64
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
+    spotifyButton: {
+      color: '#FFF',
+      borderRadius: 32,
+      fontSize: 18,
+      padding: '16px 32px'
+    }
+  });
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(Login)
+)
