@@ -6,6 +6,7 @@ const BASE_URL = 'https://api.spotify.com/v1/me'
 const AUTH_URL = 'https://accounts.spotify.com/authorize?'
 const CLIENT_ID = "94c3aab0549f494c80c8585d19b6af2f"
 const REDIRECT_URI = "http://localhost:3000/callback"
+export const POLL_INTERVAL = 5000
 
 export const loginRedirect = () => {
   const url = AUTH_URL + querystring.stringify({
@@ -74,7 +75,7 @@ export class SpotifyListener {
     while(this.running) {
       const curr = await getCurr(this.token)
       yield curr
-      await wait(5000)
+      await wait(POLL_INTERVAL)
     }
   }
 

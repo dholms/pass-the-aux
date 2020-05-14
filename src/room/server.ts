@@ -47,7 +47,6 @@ export default class RoomServer {
     })
 
     client.on('track-update', (data) => {
-      console.log('track update')
       if(id === this.leader) {
         this.broadcastToRoom('track-update', data)
       }

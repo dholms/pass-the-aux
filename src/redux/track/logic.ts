@@ -1,6 +1,6 @@
 import { createLogic } from 'redux-logic'
 import { START_LISTENING, trackStatus, UPDATE_TRACK } from './actions'
-import spotify, { SpotifyListener } from '../../spotify'
+import spotify, { SpotifyListener, POLL_INTERVAL } from '../../spotify'
 import { ProcessOpts } from '../types'
 import { PlaybackInfo } from '../../spotify/types'
 
@@ -38,7 +38,13 @@ const updateTrackLogic = createLogic({
     }
     const uri = info.track.uri
     const progress = info.progress
-    spotify.changeTrack(token, uri, progress)
+    const stateUri = getState().track.curr?.uri
+    const S10 = 10000
+    const stateProgress = getState().track.progress || -S10
+    const progressDiff = Math.abs(progress - (stateProgress + POLL_INTERVAL))
+    if(uri !== stateUri || progressDiff > S10) {
+      await spotify.changeTrack(token, uri, progress)
+    }
     dispatch(trackStatus(info))
   }
 })
