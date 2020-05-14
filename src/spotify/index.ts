@@ -6,7 +6,9 @@ const BASE_URL = 'https://api.spotify.com/v1/me'
 const AUTH_URL = 'https://accounts.spotify.com/authorize?'
 const CLIENT_ID = "94c3aab0549f494c80c8585d19b6af2f"
 const REDIRECT_URI = "http://localhost:3000/callback"
-export const POLL_INTERVAL = 5000
+
+export const POLL_INTERVAL = 3000
+export const DEBOUNCE_RANGE = 6000
 
 export const loginRedirect = () => {
   const url = AUTH_URL + querystring.stringify({
@@ -57,6 +59,12 @@ export const changeTrack = async (token: string, uri: string, position = 0) => {
   })
 }
 
+export const pauseTrack = async (token: string) => {
+  await axios.put(`${BASE_URL}/player/pause`, { }, {
+    headers: makeHeader(token)
+  })
+}
+
 export class SpotifyListener {
 
   token: string
@@ -94,4 +102,5 @@ export default {
   loginRedirect,
   getCurr,
   changeTrack,
+  pauseTrack,
 }
