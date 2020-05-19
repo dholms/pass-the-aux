@@ -6,7 +6,10 @@ import { GlobalState } from '../redux/store'
 import { createRoom, connectToRoom } from '../redux/room/actions'
 
 import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 
 class RoomButtons extends React.Component<Props, State> {
 
@@ -32,6 +35,9 @@ class RoomButtons extends React.Component<Props, State> {
     const { classes } = this.props
     return (
       <div className={classes.buttons}>
+        <Typography variant='h4' className={classes.text}>
+          Create a Room
+        </Typography>
         <Button
           onClick={this.props.createRoom}
           variant='contained'
@@ -39,21 +45,21 @@ class RoomButtons extends React.Component<Props, State> {
         >
           Create Room
         </Button>
-        <Typography variant='h6' className={classes.or}>
+        <Typography variant='h6' className={classes.text}>
           ~ Or ~
         </Typography>
+        <Typography variant='h4' className={classes.text}>
+          Join a Room
+        </Typography>
         <form onSubmit={this.connect} className={classes.form}>
-          <input 
+          <TextField 
             onChange={this.inputChanged}
             value={this.state.roomname}
             placeholder='Room name'
           />
-          <Button 
-            type='submit'
-            variant='contained'
-          >
-            Join
-          </Button>
+          <IconButton type='submit'>
+            <ArrowForwardIcon />
+          </IconButton>
         </form>
       </div>
     )
@@ -88,16 +94,14 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
-    or: {
+    text: {
       margin: 16,
       textAlign: 'center'
     },
     form: {
       display: 'flex',
-      flexDirection: 'column',
-      '& input': {
-        marginBottom: 16
-      }
+      flexDirection: 'row',
+      alignItems: 'center'
     }
   });
 
