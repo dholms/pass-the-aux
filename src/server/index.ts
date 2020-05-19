@@ -1,9 +1,22 @@
+import express from 'express'
+import path from 'path'
 import http from 'http'
 import SocketIO, { Socket } from 'socket.io'
 import { CreateRoomMsg, ConnectToRoomMsg } from '../room/types'
 import Room from '../room/server'
 
-const server = http.createServer()
+const app = express()
+
+const buildDir = path.join(__dirname, '../../', 'build')
+
+app.use(express.static(buildDir))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildDir, 'index.html'))
+
+})
+
+const server = http.createServer(app)
 const io = SocketIO(server)
 
 const rooms = {} as {[name: string]: Room}
@@ -56,4 +69,4 @@ io.on('connection', (client: Socket) => {
 
 })
 
-server.listen(3001)
+server.listen(3000)
