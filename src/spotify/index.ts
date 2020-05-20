@@ -8,6 +8,7 @@ export const DEBOUNCE_RANGE = 3000
 const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1/me'
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize?'
 
+console.log(process.env)
 const { 
   SPOTIFY_CLIENT_ID,
   SPOTIFY_REDIRECT_URI
