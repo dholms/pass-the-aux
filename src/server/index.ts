@@ -5,8 +5,9 @@ import SocketIO, { Socket } from 'socket.io'
 import { CreateRoomMsg, ConnectToRoomMsg } from '../room/types'
 import Room from '../room/server'
 
+require('dotenv').config()
+
 const BUILD_DIR = __dirname
-const PORT = 3000
 
 const app = express()
 
@@ -69,5 +70,5 @@ io.on('connection', (client: Socket) => {
 
 })
 
-server.listen(PORT)
-console.log(`Serving on port: ${PORT}`)
+server.listen(process.env.PORT)
+console.log(`Serving on port: ${process.env.PORT}`)

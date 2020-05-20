@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 import { PlaybackInfo } from "../spotify/types"
 import { Member, RoomData } from './types'
 
-const SERVER_ADDR = 'http://localhost:3000'
+const SERVER_ADDR = `${process.env.HOST}:${process.env.PORT}`
 
 export default class RoomClient {
 

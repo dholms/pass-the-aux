@@ -2,20 +2,22 @@ import axios from 'axios'
 import querystring from 'querystring'
 import { Track, PlaybackInfo } from './types'
 
-const BASE_URL = 'https://api.spotify.com/v1/me'
-const AUTH_URL = 'https://accounts.spotify.com/authorize?'
-const CLIENT_ID = "94c3aab0549f494c80c8585d19b6af2f"
-const REDIRECT_URI = "http://localhost:3000/callback"
-
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
 
+const { 
+  SPOTIFY_BASE_URL,
+  SPOTIFY_AUTH_URL,
+  SPOTIFY_CLIENT_ID,
+  SPOTIFY_REDIRECT_URI
+} = process.env
+
 export const loginRedirect = () => {
-  const url = AUTH_URL + querystring.stringify({
+  const url = SPOTIFY_AUTH_URL + querystring.stringify({
     response_type: 'token',
-    client_id: CLIENT_ID,
+    client_id: SPOTIFY_CLIENT_ID,
     scope: 'user-read-playback-state user-modify-playback-state',
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: SPOTIFY_REDIRECT_URI,
   })
   window.location.replace(url)
 }
@@ -29,7 +31,7 @@ const makeHeader = (token: string) => {
 }
 
 export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
-  const resp = await axios.get(`${BASE_URL}/player/currently-playing`, {
+  const resp = await axios.get(`${SPOTIFY_BASE_URL}/player/currently-playing`, {
     headers: makeHeader(token)
   })
   const { item, is_playing, progress_ms } = resp?.data || {}
@@ -51,7 +53,7 @@ export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
 }
 
 export const changeTrack = async (token: string, uri: string, position = 0) => {
-  await axios.put(`${BASE_URL}/player/play`, {
+  await axios.put(`${SPOTIFY_BASE_URL}/player/play`, {
     uris: [uri],
     position_ms: position
   }, {
@@ -60,13 +62,13 @@ export const changeTrack = async (token: string, uri: string, position = 0) => {
 }
 
 export const pauseTrack = async (token: string) => {
-  await axios.put(`${BASE_URL}/player/pause`, { }, {
+  await axios.put(`${SPOTIFY_BASE_URL}/player/pause`, { }, {
     headers: makeHeader(token)
   })
 }
 
 export const getUserInfo = async (token: string) => {
-  const resp = await axios.get(`${BASE_URL}`, {
+  const resp = await axios.get(`${SPOTIFY_BASE_URL}`, {
     headers: makeHeader(token)
   })
   const { display_name = 'Noname', images = [] } = resp?.data || {}
