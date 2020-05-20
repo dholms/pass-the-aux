@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import LoginButton from './components/LoginButton'
 import Player from './components/Player'
 import RoomButtons from './components/RoomButtons'
+import HelpButton from './components/HelpButton'
 
 class App extends React.Component<Props, State> {
   render() {
@@ -25,6 +26,7 @@ class App extends React.Component<Props, State> {
     }
     return (
       <Container className={classes.container}>
+        <HelpButton classes={{main: classes.helpBtn}}/>
         <Typography variant='h1' className={classes.header}>
           Pass the Aux
         </Typography>
@@ -64,6 +66,11 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'center'
     },
+    helpBtn: {
+      position: 'absolute',
+      top: 16,
+      right: 16 
+    }
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

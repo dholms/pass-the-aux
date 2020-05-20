@@ -8,6 +8,7 @@ import { GlobalState } from '../redux/store'
 import querystring from 'querystring'
 import spotify from '../spotify'
 
+import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
 class LoginButton extends React.Component<Props> {
@@ -30,14 +31,24 @@ class LoginButton extends React.Component<Props> {
     const { classes } = this.props
     if(this.props.loggedIn) return null
     return (
-      <Button 
-        onClick={this.promptLogin}
-        className={classes.spotifyButton}
-        color='secondary'
-        variant='contained'
-      >
-        Login with Spotify
-      </Button>
+      <div className={classes.main}>
+        <Typography variant='h4'>
+          Listen to music with friends.
+        </Typography>
+        <Button 
+          onClick={this.promptLogin}
+          className={classes.spotifyButton}
+          color='secondary'
+          variant='contained'
+        >
+          Login with Spotify
+        </Button>
+        <Typography variant='subtitle1'>
+          <strong>Login with Spotify</strong> and create a room.<br/>
+          When a friend joins that room, their Spotify <strong>automatically syncs</strong> with yours.<br/>
+          Tired of DJing? <strong>Pass the aux</strong> to a friend!
+        </Typography>
+      </div>
     )
   }
 }
@@ -59,6 +70,15 @@ const mapDispatchToProps = {
 
 const styles = (theme: Theme) =>
   createStyles({
+    main: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& > *': {
+        marginBottom: 32,
+        textAlign: 'center'
+      }
+    },
     spotifyButton: {
       color: '#FFF',
       borderRadius: 32,
