@@ -1,4 +1,4 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM, AUX_PASSED } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM, AUX_PASSED_SUCCESS } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
 
@@ -50,7 +50,7 @@ export default (state: RoomState = defaultState, action: RoomAction) => {
         members: updated
       }
 
-    case AUX_PASSED: 
+    case AUX_PASSED_SUCCESS: 
       return {
         ...state,
         leader: action.payload.id

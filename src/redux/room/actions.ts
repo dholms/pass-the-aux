@@ -10,6 +10,7 @@ export const JOINED_ROOM = 'JOINED_ROOM'
 
 export const PASS_AUX = 'PASS_AUX'
 export const AUX_PASSED = 'AUX_PASSED'
+export const AUX_PASSED_SUCCESS = 'AUX_PASSED_SUCCESS'
 
 interface MemberAddedAction {
   type: 'MEMBER_ADDED'
@@ -105,6 +106,22 @@ export const auxPassed = (id: string): AuxPassedAction => ({
   }
 })
 
+interface AuxPassedSuccessAction {
+  type: 'AUX_PASSED_SUCCESS'
+  payload: {
+    id: string
+  }
+}
+
+export const auxPassedSuccess = (id: string): AuxPassedSuccessAction => ({
+  type: AUX_PASSED_SUCCESS,
+  payload: {
+    id
+  }
+})
+
+
+
 export type RoomAction 
   = MemberAddedAction
   | MemberRemovedAction
@@ -113,3 +130,4 @@ export type RoomAction
   | JoinedRoomAction
   | PassAuxAction
   | AuxPassedAction
+  | AuxPassedSuccessAction

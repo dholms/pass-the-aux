@@ -2,9 +2,9 @@ import { createLogic } from 'redux-logic'
 import { ProcessOpts } from '../types'
 import { 
   CREATE_ROOM, JOINED_ROOM, CONNECT_TO_ROOM, PASS_AUX,
-  joinedRoom, memberAdded, memberRemoved, auxPassed
+  joinedRoom, memberAdded, memberRemoved, auxPassed, AUX_PASSED, auxPassedSuccess
 } from './actions'
-import { updateTrack, startListening } from '../track/actions'
+import { updateTrack, startListening, stopListening } from '../track/actions'
 import RoomClient from '../../room/client'
 import { PlaybackInfo } from '../../spotify/types'
 import { Member } from '../../room/types'
@@ -46,6 +46,7 @@ const joinedRoomLogic = createLogic({
     room.onMemberAdded = (member: Member) => dispatch(memberAdded(member))
     room.onMemberRemoved = (id: string) => dispatch(memberRemoved(id))
     room.onAuxPassed = (id: string) => dispatch(auxPassed(id))
+
   }
 })
 
@@ -61,10 +62,26 @@ const passAuxLogic = createLogic({
   }
 })
 
+const auxPassedLogic = createLogic({
+  type: AUX_PASSED,
+  async process({ getState, action }: ProcessOpts, dispatch, done) {
+    const { userId, leader } = getState().room
+    const newLeader = action.payload.id
+    if(userId === leader) {
+      dispatch(stopListening())
+    }
+    if(userId === newLeader){
+      dispatch(startListening())
+    }
+    dispatch(auxPassedSuccess(newLeader))
+    done()
+  }
+})
 
 export default [
   createRoomLogic,
   connectToRoomLogic,
   joinedRoomLogic,
-  passAuxLogic
+  passAuxLogic,
+  auxPassedLogic
 ]

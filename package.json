@@ -35,12 +35,12 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start-server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
-    "start-client": "react-scripts start",
-    "start": "node build/index.js",
+    "dev-server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
+    "dev-client": "react-scripts start",
     "build-server": "rollup -c rollup.config.ts",
     "build-client": "react-scripts build",
     "build": "yarn build-client && yarn build-server",
+    "start": "node build/index.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,5 +1,8 @@
 import { createLogic } from 'redux-logic'
-import { START_LISTENING, trackStatus, UPDATE_TRACK } from './actions'
+import { 
+  START_LISTENING, STOP_LISTENING, UPDATE_TRACK,
+  trackStatus, stoppedListening
+} from './actions'
 import spotify, { SpotifyListener, POLL_INTERVAL, DEBOUNCE_RANGE } from '../../spotify'
 import { ProcessOpts } from '../types'
 import { PlaybackInfo } from '../../spotify/types'
@@ -63,7 +66,20 @@ const updateTrackLogic = createLogic({
   }
 })
 
+const stopListeningLogic = createLogic({
+  type: STOP_LISTENING,
+  async process({ getState, action }: ProcessOpts, dispatch, done) {
+    const listener = getState().track.listener
+    if(listener !== null){
+      listener.stop()
+    }
+    dispatch(stoppedListening())
+    done()
+  }
+})
+
 export default [
   startListeningLogic,
-  updateTrackLogic
+  updateTrackLogic,
+  stopListeningLogic
 ]
