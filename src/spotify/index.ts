@@ -5,9 +5,10 @@ import { Track, PlaybackInfo } from './types'
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
 
+const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1/me'
+const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize?'
+
 const { 
-  SPOTIFY_BASE_URL,
-  SPOTIFY_AUTH_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_REDIRECT_URI
 } = process.env
