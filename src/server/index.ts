@@ -5,15 +5,15 @@ import SocketIO, { Socket } from 'socket.io'
 import { CreateRoomMsg, ConnectToRoomMsg } from '../room/types'
 import Room from '../room/server'
 
+const BUILD_DIR = __dirname
+const PORT = 3000
+
 const app = express()
 
-const buildDir = path.join(__dirname, '../../', 'build')
-
-app.use(express.static(buildDir))
+app.use(express.static(BUILD_DIR))
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(buildDir, 'index.html'))
-
+  res.sendFile(path.join(BUILD_DIR, 'index.html'))
 })
 
 const server = http.createServer(app)
@@ -69,4 +69,5 @@ io.on('connection', (client: Socket) => {
 
 })
 
-server.listen(3001)
+server.listen(PORT)
+console.log(`Serving on port: ${PORT}`)

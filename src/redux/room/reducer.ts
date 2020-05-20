@@ -1,4 +1,4 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM, AUX_PASSED } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
 
@@ -7,16 +7,18 @@ export type RoomState = {
   name: string | null
   members: Member[]
   leader: string | null
-  room: RoomClient
+  room: RoomClient | null
 }
 
 export const defaultState = {
+  userId: null,
   name: null,
   members: [],
-  leader: null
+  leader: null,
+  room: null,
 }
 
-export default (state = defaultState, action: RoomAction) => {
+export default (state: RoomState = defaultState, action: RoomAction) => {
   switch(action.type) {
 
     case JOINED_ROOM:
@@ -37,15 +39,21 @@ export default (state = defaultState, action: RoomAction) => {
         ...state,
         members: [
           ...state.members,
-          action.payload.name
+          action.payload.member
         ]
       }
 
     case MEMBER_REMOVED: 
-      const updated = state.members.filter(name => name !== action.payload.name)
+      const updated = state.members.filter(member => member.id !== action.payload.id)
       return {
         ...state,
         members: updated
+      }
+
+    case AUX_PASSED: 
+      return {
+        ...state,
+        leader: action.payload.id
       }
 
     default:

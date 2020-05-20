@@ -37,7 +37,9 @@
   "scripts": {
     "start": "react-scripts start",
     "server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
-    "build": "react-scripts build",
+    "build-server": "rollup -c rollup.config.ts",
+    "build-client": "react-scripts build",
+    "build": "yarn build-client && yarn build-server",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -58,6 +60,12 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.3",
+    "rollup": "^2.10.5",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-typescript2": "^0.27.1",
     "tsc-watch": "^4.2.3"
   }
 }

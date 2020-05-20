@@ -9,6 +9,7 @@ const gotUserTokenLogic = createLogic({
     const token = action.payload.token
     const { name, image }  = await spotify.getUserInfo(token)
     dispatch(userLoggedIn(token, name, image))
+    done()
   }
 })
 

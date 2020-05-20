@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button'
 
 class LoginButton extends React.Component<Props> {
 
-  componentWillMount() {
+  componentDidMount() {
     // Parse spotify query string that includes token.
     if(window.location.pathname.indexOf('callback') > -1){
       const qs = querystring.parse(window.location.hash.slice(1))

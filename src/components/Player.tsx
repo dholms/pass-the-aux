@@ -17,9 +17,6 @@ class Player extends React.Component<Props, State> {
     const { track, classes } = this.props
     return (
       <div className={classes.main}>
-        {track === null && 
-          <h2>None</h2>
-        }
         {track !== null &&
           <div className={classes.trackInfo}>
             <img src={track.img} alt="album art" className={classes.img} />

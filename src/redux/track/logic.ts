@@ -16,10 +16,13 @@ const startListeningLogic = createLogic({
     const listener = new SpotifyListener(token)
     for await (const info of listener.start()){
       if(info === null){
-        // TODO: Better error handling here
-        console.error("no track info found")
+        // @TODO Better feedback here
       } else {
         const room = getState().room.room
+        if(room === null){
+          // TODO: Better error handling here
+          throw new Error("Not connect to room")
+        }
         room.updateTrack(info)
         dispatch(trackStatus(info))
       }
