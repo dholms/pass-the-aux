@@ -38,7 +38,7 @@ class LoginButton extends React.Component<Props> {
         <Button 
           onClick={this.promptLogin}
           className={classes.spotifyButton}
-          color='secondary'
+          color='primary'
           variant='contained'
         >
           Login with Spotify

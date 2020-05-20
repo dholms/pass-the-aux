@@ -43,7 +43,7 @@ class RoomButtons extends React.Component<Props, State> {
           variant='contained'
           color='primary'
         >
-          Create Room
+          Create
         </Button>
         <Typography variant='h6' className={classes.text}>
           ~ Or ~
@@ -55,7 +55,7 @@ class RoomButtons extends React.Component<Props, State> {
           <TextField 
             onChange={this.inputChanged}
             value={this.state.roomname}
-            placeholder='Room name'
+            label='Room name'
           />
           <IconButton type='submit'>
             <ArrowForwardIcon />

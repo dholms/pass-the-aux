@@ -1,14 +1,13 @@
 
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles"
+
+const spotifyGreen = '#1DB954'
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#6446fa"
+      main: spotifyGreen,
     },
-    secondary: {
-      main: '#1DB954',
-    }
   }
 });
 
