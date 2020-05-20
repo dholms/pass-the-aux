@@ -35,8 +35,9 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
+    "start-server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
+    "start-start": "react-scripts start",
+    "start": "node build/index.js"
     "build-server": "rollup -c rollup.config.ts",
     "build-client": "react-scripts build",
     "build": "yarn build-client && yarn build-server",
