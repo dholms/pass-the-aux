@@ -13,6 +13,8 @@ import Player from './components/Player'
 import RoomButtons from './components/RoomButtons'
 import HelpButton from './components/HelpButton'
 
+import background from './assets/background.jpg'
+
 class App extends React.Component<Props, State> {
   render() {
     const { token, roomname, classes } = this.props
@@ -25,13 +27,15 @@ class App extends React.Component<Props, State> {
       elem = <RoomButtons />
     }
     return (
-      <Container className={classes.container}>
-        <HelpButton classes={{main: classes.helpBtn}}/>
-        <Typography variant='h1' className={classes.header}>
-          Pass the Aux
-        </Typography>
-        {elem}
-      </Container>
+      <div className={classes.main}>
+        <Container className={classes.container}>
+          <HelpButton classes={{main: classes.helpBtn}}/>
+          <Typography variant='h1' className={classes.header}>
+            Pass the Aux
+          </Typography>
+          {elem}
+        </Container>
+      </div>
     )
   }
 }
@@ -54,24 +58,35 @@ const mapDispatchToProps = {
   connectToRoom,
 }
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = (theme: Theme) => {
+  const white = 'rgba(250, 250, 250, 0.93)'
+  return createStyles({
+    main: {
+      backgroundImage: `url('${background}')`,
+      height: '100%',
+      width: '100%',
+      padding: 64,
+    },
     header: {
       textAlign: 'center',
-      marginTop: 64,
       marginBottom: 64
     },
     container: {
+      padding: 64,
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: white,
+      boxShadow: `0 0 8px 16px ${white}`
     },
     helpBtn: {
       position: 'absolute',
       top: 16,
-      right: 16 
+      right: 16,
+      color: white
     }
   });
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(App)

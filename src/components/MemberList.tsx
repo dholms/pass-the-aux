@@ -69,7 +69,8 @@ const mapDispatchToProps = {
 const styles = (theme: Theme) =>
   createStyles({
     card: {
-      width: 350
+      width: 350,
+      opacity: 1
     },
     divider: {
       marginBottom: 8
