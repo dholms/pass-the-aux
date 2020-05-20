@@ -59,7 +59,7 @@ const styles = (theme: Theme) =>
     main: {
       display: 'flex',
       flexDirection: 'row',
-      '& div': {
+      '& > div': {
         marginLeft: 16,
         marginRight: 16
 

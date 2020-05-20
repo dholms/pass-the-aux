@@ -1,10 +1,11 @@
 import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, JOINED_ROOM } from './actions'
 import RoomClient from '../../room/client'
+import { Member } from '../../room/types'
 
 export type RoomState = {
   userId: string | null
   name: string | null
-  members: string[]
+  members: Member[]
   leader: string | null
   room: RoomClient
 }

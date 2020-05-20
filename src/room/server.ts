@@ -1,30 +1,34 @@
 import { Socket } from 'socket.io'
-import { RoomData } from './types'
+import { RoomData, Member } from './types'
 
 export default class RoomServer {
   
   name: string
   leader: string
   clientById: {[id: string]: Socket }
-  userById: {[id: string]: string }
+  userById: {[id: string]: Member }
   onEmpty: () => void
 
-  constructor(name: string, username: string, client: Socket, onEmpty: () => void) {
+  constructor(name: string, username: string, image: string | null, client: Socket, onEmpty: () => void) {
     this.name = name
     this.leader = client.id
     this.clientById = {}
     this.userById = {}
     this.onEmpty = onEmpty
-    this.addMember(username, client)
+    this.addMember(username, image, client)
   }
 
-  addMember(name: string, client: Socket) {
+  addMember(name: string, image: string | null, client: Socket) {
     const id = client.id
     if(this.clientById[id] !== undefined){
       throw new Error(`client is already in room: ${id}`)
     }
     this.clientById[id] = client
-    this.userById[id] = name
+    this.userById[id] = {
+      name,
+      image,
+      id
+    }
     this.watchClient(client) 
     this.broadcastToRoom('member-added', name)
   }

@@ -67,7 +67,6 @@ class RoomButtons extends React.Component<Props, State> {
 }
 
 interface Props {
-  roomname: string  | null
   createRoom: typeof createRoom
   connectToRoom: typeof connectToRoom
   classes: any
@@ -77,9 +76,7 @@ interface State {
   roomname: string
 }
 
-const mapStateToProps = (state: GlobalState) => ({
-  roomname: state.room.name,
-})
+const mapStateToProps = (state: GlobalState) => ({ })
 
 const mapDispatchToProps = {
   createRoom,

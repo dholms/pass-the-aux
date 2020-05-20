@@ -11,9 +11,8 @@ import { PlaybackInfo } from '../../spotify/types'
 const createRoomLogic = createLogic({
   type: CREATE_ROOM,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const username = 'alice'
-    const room = await RoomClient.create(username)
-    console.log('room: ', room)
+    const { name, image } = getState().user
+    const room = await RoomClient.create(name, image)
     dispatch(joinedRoom(room))
     dispatch(startListening())
     done()
@@ -24,7 +23,7 @@ const connectToRoomLogic = createLogic({
   type: CONNECT_TO_ROOM,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { roomname } = action.payload
-    const username = 'bob'
+    const username = getState().user.name
     const room = await RoomClient.connect(roomname, username)
     dispatch(joinedRoom(room))
     done()

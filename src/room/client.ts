@@ -1,20 +1,20 @@
 import io from 'socket.io-client'
 import { PlaybackInfo } from "../spotify/types"
-import { RoomData } from './types'
+import { Member, RoomData } from './types'
 
-const SERVER_ADDR = 'http://localhost:3000'
+const SERVER_ADDR = 'http://localhost:3001'
 
 export default class RoomClient {
 
   socket: SocketIOClient.Socket
   name: string
-  members: string[]
+  members: Member[]
   leader: string
   onTrackUpdate: ((data: PlaybackInfo) => void) | null = null
   onMemberAdded: ((name: string) => void) | null = null
   onMemberRemoved: ((name: string) => void) | null = null
 
-  constructor(name: string, members: string[], leader: string, socket: SocketIOClient.Socket){
+  constructor(name: string, members: Member[], leader: string, socket: SocketIOClient.Socket){
     this.name = name
     this.members = members
     this.leader = leader
@@ -22,10 +22,10 @@ export default class RoomClient {
     this.respondToUpdates()
   }
 
-  static async create(username: string): Promise<RoomClient> {
+  static async create(username: string, image: string | null = null): Promise<RoomClient> {
     return new Promise((resolve, reject) => {
       const socket = io(SERVER_ADDR)
-      socket.emit('create-room', { username })
+      socket.emit('create-room', { username, image })
       socket.on('create-room-success', (data: RoomData) => {
         const { name, members, leader } = data
         resolve(new RoomClient(name, members, leader, socket))
@@ -34,10 +34,10 @@ export default class RoomClient {
     })
   }
 
-  static async connect(roomname: string, username: string): Promise<RoomClient> {
+  static async connect(roomname: string, username: string, image: string | null = null): Promise<RoomClient> {
     return new Promise((resolve, reject) => {
       const socket = io(SERVER_ADDR)
-      socket.emit('connect-to-room', { roomname, username })
+      socket.emit('connect-to-room', { roomname, username, image })
       socket.on('connect-to-room-success', (data: RoomData) => {
         const { name, members, leader }  = data
         resolve(new RoomClient(name, members, leader, socket))

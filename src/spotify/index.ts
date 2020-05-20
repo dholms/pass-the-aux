@@ -65,6 +65,20 @@ export const pauseTrack = async (token: string) => {
   })
 }
 
+export const getUserInfo = async (token: string) => {
+  const resp = await axios.get(`${BASE_URL}`, {
+    headers: makeHeader(token)
+  })
+  const { display_name = 'Noname', images = [] } = resp?.data || {}
+  const image = images.length > 0 ? images[0].url : null
+
+  return {
+    name: display_name,
+    token,
+    image,
+  }
+}
+
 export class SpotifyListener {
 
   token: string
@@ -103,4 +117,5 @@ export default {
   getCurr,
   changeTrack,
   pauseTrack,
+  getUserInfo,
 }

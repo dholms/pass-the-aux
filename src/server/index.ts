@@ -45,10 +45,10 @@ const uniqueId = () => {
 io.on('connection', (client: Socket) => {
 
   client.on('create-room', (data: CreateRoomMsg) => {
-    const { username } = data
+    const { username, image } = data
     const roomname = uniqueId()
     try{
-      const room = new Room(roomname, username, client, () => deleteRoom(roomname))
+      const room = new Room(roomname, username, image, client, () => deleteRoom(roomname))
       rooms[roomname] = room
       client.emit('create-room-success', room.data())
     }catch(err){
@@ -57,10 +57,10 @@ io.on('connection', (client: Socket) => {
   })
 
   client.on('connect-to-room', (data: ConnectToRoomMsg) => {
-    const { username, roomname } = data
+    const { username, image, roomname } = data
     const room = rooms[roomname]
     try {
-      room.addMember(username, client)
+      room.addMember(username, image, client)
       client.emit('connect-to-room-success', room.data())
     } catch(err) {
       client.emit('connect-to-room-failed', err.toString())
@@ -69,4 +69,4 @@ io.on('connection', (client: Socket) => {
 
 })
 
-server.listen(3000)
+server.listen(3001)
