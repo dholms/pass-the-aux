@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start-server": "tsc-watch --project tsc-server.json --onSuccess \"node ./dist/server/index.js\"",
-    "start-start": "react-scripts start",
+    "start-client": "react-scripts start",
     "start": "node build/index.js",
     "build-server": "rollup -c rollup.config.ts",
     "build-client": "react-scripts build",

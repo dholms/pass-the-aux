@@ -70,5 +70,6 @@ io.on('connection', (client: Socket) => {
 
 })
 
-server.listen(process.env.PORT)
-console.log(`Serving on port: ${process.env.PORT}`)
+const port = process.env.PORT || 3001
+server.listen(port)
+console.log(`Serving on port: ${port}`)

@@ -7,12 +7,11 @@ export const DEBOUNCE_RANGE = 3000
 
 const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1/me'
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize?'
-
-console.log(process.env)
-const { 
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_REDIRECT_URI
-} = process.env
+const SPOTIFY_CLIENT_ID = '94c3aab0549f494c80c8585d19b6af2f'
+const SPOTIFY_REDIRECT_URI =
+  process.env.NODE_ENV === 'production'
+  ? 'https://pass-the-aux-cord.herokuapp.com/callback'
+  : 'http://localhost:3000/callback'
 
 export const loginRedirect = () => {
   const url = SPOTIFY_AUTH_URL + querystring.stringify({

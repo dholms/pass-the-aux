@@ -2,7 +2,10 @@ import io from 'socket.io-client'
 import { PlaybackInfo } from "../spotify/types"
 import { Member, RoomData } from './types'
 
-const SERVER_ADDR = `${process.env.HOST}:${process.env.PORT}`
+const SERVER_ADDR = 
+  process.env.NODE_ENV === 'production'
+  ? "https://pass-the-aux-cord.herokuapp.com/"
+  : "http://localhost:3001"
 
 export default class RoomClient {
 
