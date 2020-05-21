@@ -10,7 +10,7 @@ const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize?'
 const SPOTIFY_CLIENT_ID = '94c3aab0549f494c80c8585d19b6af2f'
 const SPOTIFY_REDIRECT_URI =
   process.env.NODE_ENV === 'production'
-  ? 'https://passtheaux.live/callback'
+  ? 'https://www.passtheaux.live/callback'
   : 'http://localhost:3000/callback'
 
 export const loginRedirect = () => {
