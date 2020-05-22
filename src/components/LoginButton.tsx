@@ -53,8 +53,8 @@ class LoginButton extends React.Component<Props & RouteComponentProps> {
           <br />
           When a friend joins that room, their Spotify{" "}
           <strong>automatically syncs</strong> with yours.
-          <br />
           Tired of DJing? <strong>Pass the aux</strong> to a friend!
+          <br />
         </Typography>
       </div>
     );
@@ -95,6 +95,9 @@ const styles = (theme: Theme) =>
       fontSize: 18,
       padding: "16px 32px",
     },
+    details: {
+      fontSize: 20
+    }
   });
 
 export default connect(

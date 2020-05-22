@@ -9,6 +9,18 @@ import RoomButtons from "./components/RoomButtons";
 import { connectToRoom, createRoom } from "./redux/room/actions";
 import { GlobalState } from "./redux/store";
 
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+
+import HelpButton from './components/HelpButton'
+
+import background from './assets/background.jpg'
+import backgroundDark from './assets/background-dark.jpg'
+import backgroundDarker from './assets/background-darker.jpg'
+import { createStyles, Theme } from "@material-ui/core";
+
+
+
 interface EnsureLoginProps {
   token?: string | null;
   children: any;
@@ -65,6 +77,33 @@ const mapStateToProps = (state: GlobalState) => ({
 const mapDispatchToProps = {
   createRoom,
   connectToRoom,
-};
+}
+
+const styles = (theme: Theme) => 
+  createStyles({
+    main: {
+      backgroundImage: `url('${background}')`,
+      height: '100%',
+      width: '100%',
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: 64,
+      fontSize: 128
+    },
+    container: {
+      padding: 64,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      color: 'white',
+    },
+    helpBtn: {
+      position: 'absolute',
+      top: 16,
+      right: 16,
+      color: 'white'
+    }
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

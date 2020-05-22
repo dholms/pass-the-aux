@@ -17,14 +17,14 @@ class Player extends React.Component<Props, State> {
   render() {
     const { track, classes } = this.props;
     return (
-      <div>
+      <div className={classes.main}>
         <div className={classes.auxDetails}>
           <div>Here's the aux</div>
           <Link>
             {window.location.origin}/join/{this.props.roomname}
           </Link>
         </div>
-        <div className={classes.main}>
+        <div className={classes.player}>
           <div className={classes.trackInfo}>
             <img
               src={track ? track.img : emptyAlbum}
@@ -70,10 +70,10 @@ const mapDispatchToProps = {
 
 const styles = (theme: Theme) =>
   createStyles({
-    main: {
-      display: "flex",
-      flexDirection: "row",
-      "& > div": {
+    player: {
+      display: 'flex',
+      flexDirection: 'row',
+      '& > div': {
         marginLeft: 16,
         marginRight: 16,
       },
