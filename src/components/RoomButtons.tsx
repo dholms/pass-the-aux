@@ -56,8 +56,9 @@ class RoomButtons extends React.Component<Props, State> {
             onChange={this.inputChanged}
             value={this.state.roomname}
             label='Room name'
+            className={classes.roomInput}
           />
-          <IconButton type='submit'>
+          <IconButton type='submit' className={classes.joinBtn}>
             <ArrowForwardIcon />
           </IconButton>
         </form>
@@ -98,7 +99,26 @@ const styles = (theme: Theme) =>
     form: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      '& .MuiFormLabel-root': {
+        color: 'white'
+      },
+      '& .MuiInputBase-root': {
+        borderBottom: '1px solid white'
+      },
+    },
+    roomInput: {
+      color: 'white',
+      '& ::after': {
+        borderBottom: '2px solid white'
+      },
+      '& input': {
+        color: 'white'
+      }
+
+    },
+    joinBtn: {
+      color: 'white'
     }
   });
 

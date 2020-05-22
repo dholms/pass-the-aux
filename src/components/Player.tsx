@@ -86,28 +86,10 @@ const styles = (theme: Theme) =>
       alignItems: "center",
     },
     img: {
-      minWidth: 450,
-      maxWidth: 450,
-      "-webkit-box-shadow": "3px 3px 6px 0px rgba(0,0,0,0.75)",
-      "-moz-box-shadow": "3px 3px 6px 0px rgba(0,0,0,0.75)",
-      "box-shadow": "3px 3px 6px 0px rgba(0,0,0,0.75)",
-      marginBottom: 20,
-    },
-    centered: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-    },
-    auxDetails: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      marginBottom: 20,
-      fontSize: "120%",
-    },
-  });
+      width: 450,
+      borderRadius: 5
+    }
+  })
 
 export default connect(
   mapStateToProps,
