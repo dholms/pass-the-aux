@@ -1,18 +1,13 @@
 import React, { ReactElement } from "react";
 import { connect } from "react-redux";
-import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
-
-import { GlobalState } from "./redux/store";
-import { createRoom, connectToRoom } from "./redux/room/actions";
-
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import AppStyle from "./components/AppStyle";
+import Join from "./components/Join";
 import LoginButton from "./components/LoginButton";
 import Player from "./components/Player";
 import RoomButtons from "./components/RoomButtons";
-
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Join from "./components/Join";
-import { S_IFBLK } from "constants";
-import AppStyle from "./components/AppStyle";
+import { connectToRoom, createRoom } from "./redux/room/actions";
+import { GlobalState } from "./redux/store";
 
 interface EnsureLoginProps {
   token?: string | null;
