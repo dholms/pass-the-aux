@@ -39,7 +39,7 @@ class LoginButton extends React.Component<Props & RouteComponentProps> {
     if (this.props.loggedIn) return null;
     return (
       <div className={classes.main}>
-        <Typography variant="h4">Listen to music with friends.</Typography>
+        <Typography variant="h4">Listen to music with friends</Typography>
         <Button
           onClick={this.promptLogin}
           className={classes.spotifyButton}
@@ -48,13 +48,13 @@ class LoginButton extends React.Component<Props & RouteComponentProps> {
         >
           Login with Spotify
         </Button>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" className={classes.details}>
           <strong>Login with Spotify</strong> and create a room.
           <br />
           When a friend joins that room, their Spotify{" "}
           <strong>automatically syncs</strong> with yours.
-          Tired of DJing? <strong>Pass the aux</strong> to a friend!
           <br />
+          Tired of DJing? <strong>Pass the aux</strong> to a friend!
         </Typography>
       </div>
     );

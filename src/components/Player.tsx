@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 
 import MemberList from "./MemberList";
 import emptyAlbum from "../assets/emptyAlbum.png";
-import { Link } from "@material-ui/core";
 
 class Player extends React.Component<Props, State> {
   render() {
@@ -19,10 +18,6 @@ class Player extends React.Component<Props, State> {
     return (
       <div className={classes.main}>
         <div className={classes.auxDetails}>
-          <div>Here's the aux</div>
-          <Link>
-            {window.location.origin}/join/{this.props.roomname}
-          </Link>
         </div>
         <div className={classes.player}>
           <div className={classes.trackInfo}>
@@ -88,7 +83,7 @@ const styles = (theme: Theme) =>
     img: {
       width: 450,
       borderRadius: 5
-    }
+    },
   })
 
 export default connect(

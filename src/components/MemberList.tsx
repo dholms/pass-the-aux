@@ -12,6 +12,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
+import Link from "@material-ui/core/Link"
 import { Member } from '../room/types'
 
 class MemberList extends React.Component<Props> {
@@ -22,7 +23,10 @@ class MemberList extends React.Component<Props> {
         <Card className={classes.card}>
           <CardContent>
             <Typography variant='h5'>
-              Room: {roomname}
+              Invite Friends!<br/>
+              <Link className={classes.link}>
+                {window.location.origin}/{roomname}
+              </Link>
             </Typography>
             <Divider className={classes.divider} />
             <Typography>
@@ -75,6 +79,10 @@ const styles = (theme: Theme) =>
     divider: {
       marginBottom: 8
     },
+    link: {
+      color: theme.palette.text.primary,
+      fontSize: 18
+    }
   })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
