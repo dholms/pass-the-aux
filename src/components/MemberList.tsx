@@ -12,21 +12,33 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
-import Link from "@material-ui/core/Link"
+import Tooltip from "@material-ui/core/Tooltip"
+import IconButton from "@material-ui/core/IconButton"
+import LinkIcon from "@material-ui/icons/Link"
 import { Member } from '../room/types'
 
 class MemberList extends React.Component<Props> {
+  copyLink(link: string) {
+    navigator.clipboard.writeText(link)
+  }
+
   render() {
     const { roomname, members, leader, userId, classes } = this.props
+    const link = `${window.location.origin}/${roomname}`
     return (
       <div>
         <Card className={classes.card}>
           <CardContent>
             <Typography variant='h5'>
               Invite Friends!<br/>
-              <Link className={classes.link}>
-                {window.location.origin}/{roomname}
-              </Link>
+              <Typography className={classes.link}>
+                {link}
+                <Tooltip title='Copy Link'>
+                  <IconButton onClick={() => this.copyLink(link)}>
+                    <LinkIcon />
+                  </IconButton>
+                </Tooltip>
+              </Typography>
             </Typography>
             <Divider className={classes.divider} />
             <Typography>
@@ -80,7 +92,6 @@ const styles = (theme: Theme) =>
       marginBottom: 8
     },
     link: {
-      color: theme.palette.text.primary,
       fontSize: 18
     }
   })
