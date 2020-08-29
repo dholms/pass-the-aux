@@ -1,4 +1,5 @@
 import { createLogic } from "redux-logic";
+import { push } from 'connected-react-router'
 import { ProcessOpts } from "../types";
 import {
   CREATE_ROOM,
@@ -11,7 +12,6 @@ import {
   auxPassed,
   AUX_PASSED,
   auxPassedSuccess,
-  createRoom,
 } from "./actions";
 import { updateTrack, startListening, stopListening } from "../track/actions";
 import RoomClient from "../../room/client";
@@ -24,6 +24,7 @@ const createRoomLogic = createLogic({
     const { name, image } = getState().user;
     const room = await RoomClient.create(name, image);
     dispatch(joinedRoom(room));
+    dispatch(push(`/${room.name}`))
     dispatch(startListening());
     done();
   },
@@ -34,6 +35,13 @@ const connectToRoomLogic = createLogic({
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { roomname } = action.payload;
     const username = getState().user.name;
+
+    // dont rejoin room
+    const currRoom = getState().room?.name 
+    if(roomname === currRoom){
+      return done()
+    }
+
     try {
       const room = await RoomClient.connect(roomname, username);
       dispatch(joinedRoom(room));
@@ -50,7 +58,6 @@ const joinedRoomLogic = createLogic({
   type: JOINED_ROOM,
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    console.log("joined room");
     const { room } = action.payload;
     room.onTrackUpdate = (data: PlaybackInfo) => {
       const roomState = getState().room;

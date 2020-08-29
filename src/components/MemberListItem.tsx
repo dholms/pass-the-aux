@@ -17,7 +17,6 @@ import { Member } from '../room/types'
 const MemberListItem = (props: Props) => {
   const { member, leader, userId, classes } = props
   const { name, image, id } = member
-  console.log('id: ', id)
 
   const userIsLeader = leader === userId
   const displayButton = (userIsLeader && id !== userId) || (!userIsLeader && id === leader)

@@ -3,69 +3,49 @@ import { connect } from "react-redux";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import { GlobalState } from "../redux/store";
-import { updateTrack } from "../redux/track/actions";
 
-import { Track } from "../spotify/types";
-
-import Typography from "@material-ui/core/Typography";
-
+import TrackInfo from "./TrackInfo";
 import MemberList from "./MemberList";
-import emptyAlbum from "../assets/emptyAlbum.png";
+import { connectToRoom } from "../redux/room/actions";
+import { RouteComponentProps } from "react-router-dom";
 
 class Player extends React.Component<Props, State> {
+  componentDidMount(){
+    const { roomId } = this.props.match.params
+    roomId && this.props.connectToRoom(roomId)
+  }
+
   render() {
-    const { track, classes } = this.props;
+    const { classes } = this.props;
     return (
       <div className={classes.main}>
-        <div className={classes.auxDetails}>
-        </div>
-        <div className={classes.player}>
-          <div className={classes.trackInfo}>
-            <img
-              src={track ? track.img : emptyAlbum}
-              alt="album art"
-              className={classes.img}
-            />
-            <Typography>
-              <strong>{track ? track.name : ""}</strong>
-            </Typography>
-            <Typography>
-              <em>{track ? `${track.artist} - ${track.album}` : ""}</em>
-            </Typography>
-          </div>
-
-          <MemberList />
-        </div>
+        <TrackInfo />
+        <MemberList />
       </div>
-    );
+    )
   }
 }
 
-interface Props {
-  track: Track | null;
-  progress: number | null;
-  paused: boolean;
-  updateTrack: typeof updateTrack;
+interface MatchParams {
+  roomId: string
+}
+
+interface Props extends RouteComponentProps<MatchParams>{
+  connectToRoom: typeof connectToRoom;
   classes: any;
-  roomname: string | null;
 }
 
 interface State {}
 
-const mapStateToProps = (state: GlobalState) => ({
-  track: state.track.curr,
-  progress: state.track.progress,
-  paused: state.track.paused,
-  roomname: state.room.name,
-});
+const mapStateToProps = (state: GlobalState) => ({ });
 
 const mapDispatchToProps = {
-  updateTrack,
+  connectToRoom,
 };
 
 const styles = (theme: Theme) =>
-  createStyles({
-    player: {
+  createStyles({ 
+    main: {
       display: 'flex',
       flexDirection: 'row',
       '& > div': {
@@ -74,16 +54,7 @@ const styles = (theme: Theme) =>
       },
       justifyContent: "center",
       flexWrap: "wrap",
-    },
-    trackInfo: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    img: {
-      width: 450,
-      borderRadius: 5
-    },
+    }
   })
 
 export default connect(
