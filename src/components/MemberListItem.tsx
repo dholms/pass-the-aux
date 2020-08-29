@@ -9,17 +9,37 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Avatar from '@material-ui/core/Avatar'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
-import StarIcon from '@material-ui/icons/Star'
+import Icon from '@material-ui/core/Icon'
 
+import greyAuxIcon from '../assets/greyAuxIcon.svg'
+import greenAuxIcon from '../assets/greenAuxIcon.svg'
 import { Member } from '../room/types'
+
+interface AuxButtonProps {
+  isLeader: boolean
+  onClick: () => void
+}
+
+const AuxButton = ({ onClick, isLeader }: AuxButtonProps) => (
+  <Tooltip title="Pass Aux">
+    <IconButton onClick={onClick} disabled={isLeader}>
+      <Icon>
+        <img 
+          src={isLeader ? greenAuxIcon : greyAuxIcon}
+          width={24}
+          alt="Pass Aux"
+        />
+      </Icon>
+    </IconButton>
+  </Tooltip>
+)
 
 
 const MemberListItem = (props: Props) => {
   const { member, leader, userId, classes } = props
   const { name, image, id } = member
 
-  const userIsLeader = leader === userId
-  const displayButton = (userIsLeader && id !== userId) || (!userIsLeader && id === leader)
+  const displayButton = leader === userId || id === leader
 
   return (
     <ListItem className={classes.main}>
@@ -30,15 +50,11 @@ const MemberListItem = (props: Props) => {
         }
       </ListItemAvatar>
       <ListItemText primary={name} />
-      { displayButton && 
-        <ListItemSecondaryAction>
-          <Tooltip title="Pass Aux">
-            <IconButton disabled={!userIsLeader} onClick={() => props.passAux(id)}>
-              <StarIcon />
-            </IconButton>
-          </Tooltip>
-        </ListItemSecondaryAction>
-      }
+        { displayButton && 
+          <ListItemSecondaryAction>
+            <AuxButton isLeader={id === leader} onClick={() => props.passAux(id)} />
+          </ListItemSecondaryAction>
+        }
     </ListItem>
   )
 }
