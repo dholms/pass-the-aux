@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import { PlaybackInfo } from "../spotify/types"
+import { PlayerState } from "../spotify/types"
 import { Member, RoomData } from './types'
 
 const SERVER_ADDR = 
@@ -13,7 +13,7 @@ export default class RoomClient {
   name: string
   members: Member[]
   leader: string
-  onTrackUpdate: ((data: PlaybackInfo) => void) | null = null
+  onTrackUpdate: ((data: PlayerState) => void) | null = null
   onMemberAdded: ((member: Member) => void) | null = null
   onMemberRemoved: ((id: string) => void) | null = null
   onAuxPassed: ((id: string) => void) | null = null
@@ -50,7 +50,7 @@ export default class RoomClient {
     })
   }
 
-  updateTrack(data: PlaybackInfo) {
+  updateTrack(data: PlayerState) {
     this.socket.emit('track-update', data)
   }
 
@@ -59,7 +59,7 @@ export default class RoomClient {
   }
 
   respondToUpdates() {
-    this.socket.on('track-update', (data: PlaybackInfo) => {
+    this.socket.on('track-update', (data: PlayerState) => {
       if(this.onTrackUpdate !== null) {
         this.onTrackUpdate(data)
       }

@@ -11,6 +11,7 @@ class Callback extends React.Component<Props & RouteComponentProps> {
   componentDidMount() {
     // Parse spotify query string that includes token.
     const qs = querystring.parse(window.location.hash.slice(1));
+    console.log("QS: ", qs)
     if (qs.access_token && typeof qs.access_token === "string") {
       this.props.gotUserToken(qs.access_token);
       if (qs.state) {

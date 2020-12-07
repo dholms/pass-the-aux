@@ -4,7 +4,7 @@ import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import { GlobalState } from "../redux/store";
 
-import { Track } from "../spotify/types";
+import { PlayerState } from "../spotify/types";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -12,11 +12,17 @@ import emptyAlbum from "../assets/emptyAlbum.png";
 
 class TrackInfo extends React.Component<Props, State> {
   render() {
-    const { track, classes } = this.props;
+    const { playerState, classes } = this.props;
+    const track = playerState?.track_window?.current_track
+    const img = track?.album?.images[0]?.url
+    const artist = track?.artists
+      .map(artist => artist.name)
+      .join(', ')
+    const album = track?.album.name || ''
     return (
       <div className={classes.main}>
         <img
-          src={track ? track.img : emptyAlbum}
+          src={img ? img : emptyAlbum}
           alt="album art"
           className={classes.img}
         />
@@ -24,7 +30,7 @@ class TrackInfo extends React.Component<Props, State> {
           <strong>{track ? track.name : ""}</strong>
         </Typography>
         <Typography>
-          <em>{track ? `${track.artist} - ${track.album}` : ""}</em>
+          <em>{artist} - {album}</em>
         </Typography>
       </div>
     )
@@ -32,14 +38,14 @@ class TrackInfo extends React.Component<Props, State> {
 }
 
 interface Props {
-  track: Track | null;
+  playerState: PlayerState | null;
   classes: any;
 }
 
 interface State {}
 
 const mapStateToProps = (state: GlobalState) => ({
-  track: state.track.curr,
+  playerState: state.track.playerState,
 });
 
 const mapDispatchToProps = { };

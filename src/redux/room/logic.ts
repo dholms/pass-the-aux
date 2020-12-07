@@ -13,9 +13,9 @@ import {
   AUX_PASSED,
   auxPassedSuccess,
 } from "./actions";
-import { updateTrack, startListening, stopListening } from "../track/actions";
+import { updateTrack, startListening } from "../track/actions";
 import RoomClient from "../../room/client";
-import { PlaybackInfo } from "../../spotify/types";
+import { PlayerState } from "../../spotify/types";
 import { Member } from "../../room/types";
 
 const createRoomLogic = createLogic({
@@ -59,7 +59,7 @@ const joinedRoomLogic = createLogic({
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { room } = action.payload;
-    room.onTrackUpdate = (data: PlaybackInfo) => {
+    room.onTrackUpdate = (data: PlayerState) => {
       const roomState = getState().room;
       if (roomState.userId !== roomState.leader) {
         dispatch(updateTrack(data));
@@ -86,14 +86,14 @@ const passAuxLogic = createLogic({
 const auxPassedLogic = createLogic({
   type: AUX_PASSED,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { userId, leader } = getState().room;
+    // const { userId, leader } = getState().room;
     const newLeader = action.payload.id;
-    if (userId === leader) {
-      dispatch(stopListening());
-    }
-    if (userId === newLeader) {
-      dispatch(startListening());
-    }
+    // if (userId === leader) {
+      // dispatch(stopListening());
+    // }
+    // if (userId === newLeader) {
+    //   dispatch(startListening());
+    // }
     dispatch(auxPassedSuccess(newLeader));
     done();
   },

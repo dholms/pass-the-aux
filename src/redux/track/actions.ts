@@ -1,12 +1,8 @@
 import { Action } from 'redux'
-import { PlaybackInfo } from '../../spotify/types'
-import { SpotifyListener } from '../../spotify'
+import { PlayerState, SpotifyPlayer } from '../../spotify/types'
 
 export const START_LISTENING = 'START_LISTENING'
 export const STARTED_LISTENING = 'STARTED_LISTENING'
-
-export const STOP_LISTENING = 'STOP_LISTENING'
-export const STOPPED_LISTENING = 'STOPPED_LISTENING'
 
 export const TRACK_STATUS = 'TRACK_STATUS'
 export const UPDATE_TRACK = 'UPDATE_TRACK'
@@ -22,49 +18,33 @@ export const startListening = (): StartListeningAction => ({
 export interface StartedListeningAction extends Action {
   type: 'STARTED_LISTENING'
   payload: {
-    listener: SpotifyListener
+    player: SpotifyPlayer
   }
 }
 
-export const startedListening = (listener: SpotifyListener): StartedListeningAction => ({
+export const startedListening = (player: SpotifyPlayer): StartedListeningAction => ({
   type: STARTED_LISTENING,
   payload: {
-    listener
+    player
   }
-})
-
-export interface StopListeningAction extends Action {
-  type: 'STOP_LISTENING'
-}
-
-export const stopListening = (): StopListeningAction => ({
-  type: STOP_LISTENING,
-})
-
-export interface StoppedListeningAction extends Action {
-  type: 'STOPPED_LISTENING'
-}
-
-export const stoppedListening = (): StoppedListeningAction => ({
-  type: STOPPED_LISTENING,
 })
 
 export interface TrackStatusAction extends Action {
   type: 'TRACK_STATUS'
-  payload: PlaybackInfo
+  payload: PlayerState
 }
 
-export const trackStatus = (payload: PlaybackInfo): TrackStatusAction => ({
+export const trackStatus = (payload: PlayerState): TrackStatusAction => ({
   type: TRACK_STATUS,
   payload
 })
 
 export interface UpdateTrackAction extends Action {
   type: 'UPDATE_TRACK'
-  payload: PlaybackInfo
+  payload: PlayerState
 }
 
-export const updateTrack = (payload: PlaybackInfo): UpdateTrackAction => ({
+export const updateTrack = (payload: PlayerState): UpdateTrackAction => ({
   type: UPDATE_TRACK,
   payload
 })
@@ -72,7 +52,5 @@ export const updateTrack = (payload: PlaybackInfo): UpdateTrackAction => ({
 export type TrackAction
   = StartListeningAction
   | StartedListeningAction
-  | StopListeningAction
-  | StoppedListeningAction
   | TrackStatusAction
   | UpdateTrackAction

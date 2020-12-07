@@ -1,43 +1,30 @@
-import { TrackAction, TRACK_STATUS, STARTED_LISTENING, STOPPED_LISTENING } from './actions'
-import { Track } from '../../spotify/types'
-import { SpotifyListener } from '../../spotify'
+import { TrackAction, TRACK_STATUS, STARTED_LISTENING } from './actions'
+import { PlayerState, SpotifyPlayer } from '../../spotify/types'
 
 export type TrackState = {
-  curr: Track | null
-  progress: number | null
-  paused: boolean
-  listener: SpotifyListener | null
+  playerState: PlayerState | null
+  player: SpotifyPlayer | null
 }
 
 export const defaultState = {
-  curr: null,
-  progress: null,
-  paused: false,
-  listener: null
+  playerState: null,
+  player: null
 }
 
 export default (state: TrackState = defaultState, action: TrackAction) => {
   switch(action.type) {
 
     case TRACK_STATUS:
-      const { track, progress, paused } = action.payload
+      const playerState = action.payload
       return {
         ...state,
-        curr: track,
-        progress,
-        paused
+        playerState
       }
 
     case STARTED_LISTENING: 
       return {
         ...state,
-        listener: action.payload.listener
-      }
-
-    case STOPPED_LISTENING:
-      return {
-        ...state,
-        listener: null
+        player: action.payload.player
       }
 
     default:
