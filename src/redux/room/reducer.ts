@@ -1,7 +1,7 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, AUX_PASSED_SUCCESS, TRACK_STATUS, SYNC_PLAYER } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, AUX_PASSED_SUCCESS, TRACK_STATUS, SYNC_PLAYER, AUX_PASSED } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
-import { PlayerState } from '../../spotify/types'
+import { PlayerState, SpotifyPlayer } from '../../spotify/types'
 
 export type RoomState = {
   userId: string | null
@@ -10,6 +10,7 @@ export type RoomState = {
   leader: string | null
   room: RoomClient | null
   playerState: PlayerState | null
+  player: SpotifyPlayer | null
 }
 
 export const defaultState = {
@@ -19,6 +20,7 @@ export const defaultState = {
   leader: null,
   room: null,
   playerState: null,
+  player: null,
 }
 
 export default (state: RoomState = defaultState, action: RoomAction) => {
@@ -54,7 +56,7 @@ export default (state: RoomState = defaultState, action: RoomAction) => {
         members: updated
       }
 
-    case AUX_PASSED_SUCCESS: 
+    case AUX_PASSED: 
       return {
         ...state,
         leader: action.payload.id

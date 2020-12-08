@@ -3,21 +3,18 @@ import { connectRouter, RouterState, routerMiddleware } from 'connected-react-ro
 import history from './history'
 import { createLogicMiddleware } from 'redux-logic'
 import user, { UserState } from './user/reducer'
-import track, { TrackState } from './track/reducer'
 import room, { RoomState } from './room/reducer'
 import logic from './logic'
 
 
 export type GlobalState = {
   user: UserState
-  track: TrackState
   room: RoomState
   router: RouterState
 }
 
 const reducers = combineReducers({
   user,
-  track,
   room,
   router: connectRouter(history)
 })

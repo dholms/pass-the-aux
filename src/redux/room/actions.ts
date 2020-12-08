@@ -14,6 +14,7 @@ export const PASS_AUX = 'PASS_AUX'
 export const AUX_PASSED = 'AUX_PASSED'
 export const AUX_PASSED_SUCCESS = 'AUX_PASSED_SUCCESS'
 
+export const UPDATE_TRACK = 'UPDATE_TRACK'
 export const TRACK_STATUS = 'TRACK_STATUS'
 export const SYNC_PLAYER = 'SYNC_PLAYER'
 
@@ -125,6 +126,16 @@ export const auxPassedSuccess = (id: string): AuxPassedSuccessAction => ({
   }
 })
 
+export interface UpdateTrackAction extends Action {
+  type: 'UPDATE_TRACK'
+  payload: PlayerState
+}
+
+export const updateTrack = (payload: PlayerState): UpdateTrackAction => ({
+  type: UPDATE_TRACK,
+  payload
+})
+
 export interface TrackStatusAction extends Action {
   type: 'TRACK_STATUS'
   payload: PlayerState
@@ -155,5 +166,6 @@ export type RoomAction
   | PassAuxAction
   | AuxPassedAction
   | AuxPassedSuccessAction
+  | UpdateTrackAction
   | TrackStatusAction
   | SyncPlayerAction

@@ -28,27 +28,35 @@ const makeHeader = (token: string) => {
 }
 
 export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
-    const player: SpotifyPlayer = new (window as any).Spotify.Player({
-      name: 'Pass the Aux',
-      getOAuthToken: (cb: any) => { cb(token); }
-    });
+  // ensure spotify loaded
+  for(let i=0; i<10; i++){
+    if((window as any).Spotify !== undefined){
+      break
+    }
+    await wait(100)
+  }
 
-    // Error handling
-    player.addListener('initialization_error', ({ message }: any) => { console.error(message); });
-    player.addListener('authentication_error', ({ message }: any) => { console.error(message); });
-    player.addListener('account_error', ({ message }: any) => { console.error(message); });
-    player.addListener('playback_error', ({ message }: any) => { console.error(message); });
+  const player: SpotifyPlayer = new (window as any).Spotify.Player({
+    name: 'Pass the Aux',
+    getOAuthToken: (cb: any) => { cb(token); }
+  });
 
-    // // send updates
-    // player.addListener('player_state_changed', cb)
+  // Error handling
+  player.addListener('initialization_error', ({ message }: any) => { console.error(message); });
+  player.addListener('authentication_error', ({ message }: any) => { console.error(message); });
+  player.addListener('account_error', ({ message }: any) => { console.error(message); });
+  player.addListener('playback_error', ({ message }: any) => { console.error(message); });
 
-    // Connect to the player!
-    player.connect();
+  // // send updates
+  // player.addListener('player_state_changed', cb)
 
-    // Choose player as device
-    await setDeviceToPlayer(token)
+  // Connect to the player!
+  player.connect();
 
-    return player
+  // Choose player as device
+  await setDeviceToPlayer(token)
+
+  return player
 }
 
 // export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
@@ -98,7 +106,6 @@ export const getPlayerId = async (token: string, tries = 5): Promise<string | nu
   for(let i=0; i<tries; i++){
     const devices = await getDevices(token)
     player = devices.find(d => d.name === 'Pass the Aux')
-    console.log("PLAYER: ", player)
     if(player !== undefined) {
       break
     }
@@ -133,33 +140,6 @@ export const getUserInfo = async (token: string) => {
     image,
   }
 }
-
-// export class SpotifyListener {
-
-//   token: string
-//   curr: Track | null
-//   running: boolean
-
-//   constructor(token: string){
-//     this.token = token
-//     this.curr = null
-//     this.running = false
-//   }
-
-//   async *start(): AsyncIterable<PlaybackInfo | null> {
-//     this.running = true
-
-//     while(this.running) {
-//       const curr = await getCurr(this.token)
-//       yield curr
-//       await wait(POLL_INTERVAL)
-//     }
-//   }
-
-//   stop() {
-//     this.running = false
-//   }
-// }
 
 const wait = (time: number) => {
   return new Promise(resolve => {
