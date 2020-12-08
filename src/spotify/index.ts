@@ -56,12 +56,12 @@ export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> 
   }
   // spotify gets nervous & needs a second to breath
   await wait(100)
-  await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId] }, {
+  await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId], play: true }, {
     headers: makeHeader(token)
   })
 }
 
-export const getPlayerId = async (token: string, tries = 5): Promise<string | null> => {
+export const getPlayerId = async (token: string, tries = 10): Promise<string | null> => {
   let player: Device | undefined
   for(let i=0; i<tries; i++){
     const devices = await getDevices(token)
@@ -69,7 +69,7 @@ export const getPlayerId = async (token: string, tries = 5): Promise<string | nu
     if(player !== undefined) {
       break
     }
-    await wait(500) 
+    await wait(200) 
   }
   return player === undefined ? null : player.id
 }

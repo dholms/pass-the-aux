@@ -48,15 +48,10 @@ class HelpButton extends React.Component<Props, State> {
               </Typography>
               <Divider className={classes.divider} />
               <Question question="I joined a room but music won't play.">
-                Make sure you have your Spotify app open. Try playing a random song. We need to know which device you're using so that it can start playing there.
+                Make sure the "Pass the Aux" is selected as the device in your spotify player.
               </Question>
               <Question question='Do I need a paid Spotify account?'>
-                To play music? No. To listen to music? Yes. I know this is sort of weird. The reason is that free-tier Spotify doesn't let you play specific tracks, only shuffle playlists/albums. This app works by telling spotify to play certain tracks.
-              </Question>
-              <Question question='Why does it make me refresh my login every hour?'>
-                <strong>Short answer:</strong> because Spotify makes us.<br/>
-
-                <strong>Long (techy) answer:</strong> because everything happens client-side, we're not storing user tokens. Spotify's client-side auth is ephemeral and expires every hour.
+                Yup unfortunately, Spotify's API is very limited for free accounts
               </Question>
               <Question question='Can you add playlists/track status/voting/etc?'>
                 Nope. This is a digital aux cord. Does the aux cord in your car of those features?

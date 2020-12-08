@@ -20,6 +20,7 @@ const gotUserCodeLogic = createLogic({
 
 const gotUserTokenLogic = createLogic({
   type: GOT_USER_TOKEN,
+  warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { token } = action.payload
     const { name, image }  = await spotify.getUserInfo(token)
