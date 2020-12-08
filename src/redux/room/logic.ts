@@ -70,12 +70,12 @@ const syncPlayerLogic = createLogic({
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { room, player } = action.payload;
     player.addListener('player_state_changed', (playerState: PlayerState) => {
-      const room = getState().room.room
+      const { leader, room } = getState().room
       if(room === null){
         // TODO: Better error handling here
         throw new Error("Not connect to room")
       }
-      if(room.leader === room.socket.id) {
+      if(leader === room.socket.id) {
         room.updateTrack(playerState)
       }
       dispatch(trackStatus(playerState))
@@ -143,6 +143,7 @@ const passAuxLogic = createLogic({
     const room = getState().room.room;
     if (room) {
       room.passAux(id);
+      dispatch(auxPassed(id))
     }
     done();
   },
