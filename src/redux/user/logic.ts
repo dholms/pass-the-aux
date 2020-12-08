@@ -42,10 +42,14 @@ const refreshUserTokenLogic = createLogic({
       done()
       return
     }
-    const { access_token, refresh_token, expires_in } = await spotify.auth.refreshUserToken(refreshToken)
-    localStorage.setItem('refresh_token', refresh_token)
-    localStorage.setItem('expires_at', (Date.now() + expires_in * 1000).toString())
-    dispatch(gotUserToken(access_token))
+    try {
+      const { access_token, refresh_token, expires_in } = await spotify.auth.refreshUserToken(refreshToken)
+      localStorage.setItem('refresh_token', refresh_token)
+      localStorage.setItem('expires_at', (Date.now() + expires_in * 1000).toString())
+      dispatch(gotUserToken(access_token))
+    } catch(err) {
+      dispatch(attemptedLogin())
+    }
     done()
   }
 })
