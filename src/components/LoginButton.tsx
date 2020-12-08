@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 
-import { gotUserToken } from "../redux/user/actions";
 import { GlobalState } from "../redux/store";
 
 import spotify from "../spotify";
@@ -10,15 +9,23 @@ import spotify from "../spotify";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { connectToRoom } from "../redux/room/actions";
+import { refreshUserToken } from "../redux/user/actions";
 
 class LoginButton extends React.Component<Props> {
 
+  componentDidMount() {
+    this.props.refreshUserToken()
+  }
+
   promptLogin() {
-    spotify.loginRedirect();
+    spotify.auth.loginRedirect();
   }
 
   render() {
-    const { classes } = this.props;
+    const { attemptedLogin, classes } = this.props;
+    if(!attemptedLogin) {
+      return null
+    }
     return (
       <div className={classes.main}>
         <Typography variant="h4">Listen to music with friends</Typography>
@@ -44,16 +51,19 @@ class LoginButton extends React.Component<Props> {
 }
 
 interface Props {
-  gotUserToken: typeof gotUserToken;
+  attemptedLogin: boolean
   connectToRoom: typeof connectToRoom;
+  refreshUserToken: typeof refreshUserToken;
   classes: any;
 }
 
-const mapStateToProps = (state: GlobalState) => ({ });
+const mapStateToProps = (state: GlobalState) => ({ 
+  attemptedLogin: state.user.attemptedLogin
+});
 
 const mapDispatchToProps = {
-  gotUserToken,
   connectToRoom,
+  refreshUserToken,
 };
 
 const styles = (theme: Theme) =>

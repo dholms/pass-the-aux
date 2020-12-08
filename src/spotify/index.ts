@@ -1,27 +1,11 @@
 import axios from 'axios'
-import querystring from 'querystring'
 import { Device, SpotifyPlayer } from './types'
+import auth from './auth'
 
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
 
 const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1/me'
-const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize?'
-const SPOTIFY_CLIENT_ID = '94c3aab0549f494c80c8585d19b6af2f'
-const SPOTIFY_REDIRECT_URI =
-  process.env.NODE_ENV === 'production'
-  ? 'https://www.passtheaux.live/callback'
-  : 'http://localhost:3000/callback'
-
-export const loginRedirect = () => {
-  const url = SPOTIFY_AUTH_URL + querystring.stringify({
-    response_type: 'token',
-    client_id: SPOTIFY_CLIENT_ID,
-    scope: 'user-read-playback-state user-modify-playback-state streaming user-read-email user-read-private',
-    redirect_uri: SPOTIFY_REDIRECT_URI,
-  })
-  window.location.replace(url)
-}
 
 const makeHeader = (token: string) => {
   return { 'Authorization': 'Bearer ' + token }
@@ -124,7 +108,7 @@ const wait = (time: number) => {
 }
 
 export default {
-  loginRedirect,
+  auth,
   createPlayer,
   changeTrack,
   setDeviceToPlayer,
