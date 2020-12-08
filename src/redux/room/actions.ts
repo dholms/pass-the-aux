@@ -1,5 +1,7 @@
+import { Action } from 'redux'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
+import { PlayerState, SpotifyPlayer } from '../../spotify/types'
 
 export const MEMBER_ADDED = 'MEMBER_ADDED'
 export const MEMBER_REMOVED = 'MEMBER_REMOVED'
@@ -11,6 +13,9 @@ export const JOINED_ROOM = 'JOINED_ROOM'
 export const PASS_AUX = 'PASS_AUX'
 export const AUX_PASSED = 'AUX_PASSED'
 export const AUX_PASSED_SUCCESS = 'AUX_PASSED_SUCCESS'
+
+export const TRACK_STATUS = 'TRACK_STATUS'
+export const SYNC_PLAYER = 'SYNC_PLAYER'
 
 interface MemberAddedAction {
   type: 'MEMBER_ADDED'
@@ -120,6 +125,25 @@ export const auxPassedSuccess = (id: string): AuxPassedSuccessAction => ({
   }
 })
 
+export interface TrackStatusAction extends Action {
+  type: 'TRACK_STATUS'
+  payload: PlayerState
+}
+
+export const trackStatus = (payload: PlayerState): TrackStatusAction => ({
+  type: TRACK_STATUS,
+  payload
+})
+
+export interface SyncPlayerAction extends Action {
+  type: 'SYNC_PLAYER'
+  payload: { room: RoomClient, player: SpotifyPlayer }
+}
+
+export const syncPlayer = (room: RoomClient, player: SpotifyPlayer): SyncPlayerAction => ({
+  type: SYNC_PLAYER,
+  payload: { room, player }
+})
 
 
 export type RoomAction 
@@ -131,3 +155,5 @@ export type RoomAction
   | PassAuxAction
   | AuxPassedAction
   | AuxPassedSuccessAction
+  | TrackStatusAction
+  | SyncPlayerAction

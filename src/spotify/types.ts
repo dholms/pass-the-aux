@@ -14,7 +14,7 @@
 
 export interface SpotifyPlayer {
   addListener: (msg: string, callback: any) => any
-  getCurrentState: () => Promise<PlayerState>
+  getCurrentState: () => Promise<PlayerState | null>
   connect: () => Promise<boolean>
   pause: () => Promise<boolean>
   resume: () => Promise<boolean>
@@ -64,4 +64,14 @@ export type AlbumArt = {
 export type Artist = {
   name: string
   uri: string
+}
+
+export type Device = {
+  id: string
+  is_active: boolean
+  is_private_session: boolean
+  is_restricted: boolean
+  name: string
+  type: string
+  volume_percent: number
 }

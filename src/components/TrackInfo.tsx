@@ -15,6 +15,7 @@ class TrackInfo extends React.Component<Props, State> {
     const { playerState, classes } = this.props;
     const track = playerState?.track_window?.current_track
     const img = track?.album?.images[0]?.url
+    console.log("IMG: ", img)
     const artist = track?.artists
       .map(artist => artist.name)
       .join(', ')

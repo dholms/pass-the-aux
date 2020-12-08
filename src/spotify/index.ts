@@ -1,5 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
+import { Device, PlayerState, SpotifyPlayer } from './types'
 
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
@@ -24,6 +25,30 @@ export const loginRedirect = () => {
 
 const makeHeader = (token: string) => {
   return { 'Authorization': 'Bearer ' + token }
+}
+
+export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
+    const player: SpotifyPlayer = new (window as any).Spotify.Player({
+      name: 'Pass the Aux',
+      getOAuthToken: (cb: any) => { cb(token); }
+    });
+
+    // Error handling
+    player.addListener('initialization_error', ({ message }: any) => { console.error(message); });
+    player.addListener('authentication_error', ({ message }: any) => { console.error(message); });
+    player.addListener('account_error', ({ message }: any) => { console.error(message); });
+    player.addListener('playback_error', ({ message }: any) => { console.error(message); });
+
+    // // send updates
+    // player.addListener('player_state_changed', cb)
+
+    // Connect to the player!
+    player.connect();
+
+    // Choose player as device
+    await setDeviceToPlayer(token)
+
+    return player
 }
 
 // export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
@@ -55,6 +80,38 @@ export const changeTrack = async (token: string, uri: string, position = 0) => {
   }, {
     headers: makeHeader(token)
   })
+}
+
+export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> => {
+  const deviceId = await getPlayerId(token, tries)
+  if(deviceId === null) {
+    throw new Error("Could not find Pass the Aux device")
+  }
+
+  await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId] }, {
+    headers: makeHeader(token)
+  })
+}
+
+export const getPlayerId = async (token: string, tries = 5): Promise<string | null> => {
+  let player: Device | undefined
+  for(let i=0; i<tries; i++){
+    const devices = await getDevices(token)
+    player = devices.find(d => d.name === 'Pass the Aux')
+    console.log("PLAYER: ", player)
+    if(player !== undefined) {
+      break
+    }
+    await wait(500) 
+  }
+  return player === undefined ? null : player.id
+}
+
+export const getDevices = async (token: string): Promise<Device[]> => {
+  const res = await axios.get(`${SPOTIFY_BASE_URL}/player/devices`, {
+    headers: makeHeader(token)
+  })
+  return res?.data?.devices || []
 }
 
 export const pauseTrack = async (token: string) => {
@@ -104,16 +161,19 @@ export const getUserInfo = async (token: string) => {
 //   }
 // }
 
-// const wait = (time: number) => {
-//   return new Promise(resolve => {
-//     setTimeout(resolve, time)
-//   })
-// }
+const wait = (time: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}
 
 export default {
   loginRedirect,
-  // getCurr,
+  createPlayer,
   changeTrack,
+  setDeviceToPlayer,
+  getPlayerId,
+  getDevices,
   pauseTrack,
   getUserInfo,
 }

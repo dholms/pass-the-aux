@@ -8,6 +8,7 @@ import TrackInfo from "./TrackInfo";
 import MemberList from "./MemberList";
 import { connectToRoom } from "../redux/room/actions";
 import { RouteComponentProps } from "react-router-dom";
+import spotify from '../spotify'
 
 class Player extends React.Component<Props, State> {
   componentDidMount(){
@@ -31,13 +32,16 @@ interface MatchParams {
 }
 
 interface Props extends RouteComponentProps<MatchParams>{
+  token: string | null
   connectToRoom: typeof connectToRoom;
   classes: any;
 }
 
 interface State {}
 
-const mapStateToProps = (state: GlobalState) => ({ });
+const mapStateToProps = (state: GlobalState) => ({ 
+  token: state.user.token
+});
 
 const mapDispatchToProps = {
   connectToRoom,

@@ -12,20 +12,26 @@ import {
   auxPassed,
   AUX_PASSED,
   auxPassedSuccess,
+  syncPlayer,
+  SYNC_PLAYER,
 } from "./actions";
 import { updateTrack, startListening } from "../track/actions";
 import RoomClient from "../../room/client";
 import { PlayerState } from "../../spotify/types";
 import { Member } from "../../room/types";
+import spotify from "../../spotify";
 
 const createRoomLogic = createLogic({
   type: CREATE_ROOM,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { name, image } = getState().user;
+    const { name, image, token } = getState().user;
+    if(token === null){
+      throw new Error("No token")
+    }
+    const player = await spotify.createPlayer(token)
     const room = await RoomClient.create(name, image);
-    dispatch(joinedRoom(room));
+    dispatch(syncPlayer(room, player));
     dispatch(push(`/${room.name}`))
-    dispatch(startListening());
     done();
   },
 });
@@ -33,6 +39,9 @@ const createRoomLogic = createLogic({
 const connectToRoomLogic = createLogic({
   type: CONNECT_TO_ROOM,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
+    // start player
+    dispatch(startListening())
+
     const { roomname } = action.payload;
     const username = getState().user.name;
 
@@ -43,8 +52,14 @@ const connectToRoomLogic = createLogic({
     }
 
     try {
+      const token = getState().user.token;
+      if(token === null){
+        throw new Error("No token")
+      }
+      const player = await spotify.createPlayer(token)
       const room = await RoomClient.connect(roomname, username);
-      dispatch(joinedRoom(room));
+
+      dispatch(syncPlayer(room, player))
       done();
     } catch (e) {
       console.warn(e);
@@ -54,18 +69,24 @@ const connectToRoomLogic = createLogic({
   },
 });
 
-const joinedRoomLogic = createLogic({
-  type: JOINED_ROOM,
+const syncPlayerLogic = createLogic({
+  type: SYNC_PLAYER,
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { room } = action.payload;
+    const { room, player } = action.payload;
     room.onTrackUpdate = (data: PlayerState) => {
       const roomState = getState().room;
       if (roomState.userId !== roomState.leader) {
         dispatch(updateTrack(data));
       }
     };
-    room.onMemberAdded = (member: Member) => dispatch(memberAdded(member));
+    room.onMemberAdded = async (member: Member) => {
+      dispatch(memberAdded(member))
+      const playerState = await getState().track.player?.getCurrentState()
+      if(playerState) {
+        room.updateTrack(playerState)
+      }
+    }
     room.onMemberRemoved = (id: string) => dispatch(memberRemoved(id));
     room.onAuxPassed = (id: string) => dispatch(auxPassed(id));
   },
@@ -102,7 +123,7 @@ const auxPassedLogic = createLogic({
 export default [
   createRoomLogic,
   connectToRoomLogic,
-  joinedRoomLogic,
+  syncPlayerLogic,
   passAuxLogic,
   auxPassedLogic,
 ];

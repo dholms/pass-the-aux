@@ -1,7 +1,8 @@
 import { createLogic } from 'redux-logic'
 import { 
   START_LISTENING, UPDATE_TRACK,
-  trackStatus
+  trackStatus,
+  startedListening
 } from './actions'
 import spotify, { DEBOUNCE_RANGE } from '../../spotify'
 import { ProcessOpts } from '../types'
@@ -29,18 +30,25 @@ const startListeningLogic = createLogic({
     player.addListener('playback_error', ({ message }: any) => { console.error(message); });
 
     // send updates
-    player.addListener('player_state_changed', (state: PlayerState) => {
+    player.addListener('player_state_changed', (playerState: PlayerState) => {
       const room = getState().room.room
       if(room === null){
         // TODO: Better error handling here
         throw new Error("Not connect to room")
       }
-      room.updateTrack(state)
-      dispatch(trackStatus(state))
+      if(room.leader === state.room.userId) {
+        room.updateTrack(playerState)
+      }
+      dispatch(trackStatus(playerState))
     });
 
     // Connect to the player!
     player.connect();
+    dispatch(startedListening(player))
+
+    // Choose player as device
+    spotify.setDeviceToPlayer(token)
+
   }
 })
 
@@ -61,18 +69,16 @@ const updateTrackLogic = createLogic({
     const currState = await player.getCurrentState()
 
     const infoUri = info.track_window.current_track.uri
-    const stateUri = currState.track_window.current_track.uri
+    const stateUri = currState?.track_window?.current_track?.uri
 
-    const progressDiff = Math.abs(info.position - currState.position)
-    if(info.paused && !currState.paused){
+    const progressDiff = Math.abs(info.position - (currState?.position || 0))
+    if(info.paused && !currState?.paused){
       await player.pause()
-    } else if(!info.paused && currState.paused) {
+    } else if(!info.paused && currState?.paused) {
       await player.resume()
     }
 
-    if( infoUri !== stateUri || 
-        progressDiff > DEBOUNCE_RANGE
-      ) {
+    if(infoUri !== stateUri || progressDiff > DEBOUNCE_RANGE) {
       await spotify.changeTrack(token, infoUri, info.position)
     }
     dispatch(trackStatus(info))
