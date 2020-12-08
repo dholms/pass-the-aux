@@ -47,9 +47,6 @@ export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
   player.addListener('account_error', ({ message }: any) => { console.error(message); });
   player.addListener('playback_error', ({ message }: any) => { console.error(message); });
 
-  // // send updates
-  // player.addListener('player_state_changed', cb)
-
   // Connect to the player!
   player.connect();
 

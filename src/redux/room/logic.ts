@@ -14,7 +14,6 @@ import {
   updateTrack,
   UPDATE_TRACK,
 } from "./actions";
-// import { updateTrack, startListening } from "../track/actions";
 import RoomClient from "../../room/client";
 import { PlayerState } from "../../spotify/types";
 import { Member } from "../../room/types";
