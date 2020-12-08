@@ -31,13 +31,16 @@ interface MatchParams {
 }
 
 interface Props extends RouteComponentProps<MatchParams>{
+  token: string | null
   connectToRoom: typeof connectToRoom;
   classes: any;
 }
 
 interface State {}
 
-const mapStateToProps = (state: GlobalState) => ({ });
+const mapStateToProps = (state: GlobalState) => ({ 
+  token: state.user.token
+});
 
 const mapDispatchToProps = {
   connectToRoom,

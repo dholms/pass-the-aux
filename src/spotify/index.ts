@@ -1,6 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
-import { Track, PlaybackInfo } from './types'
+import { Device, SpotifyPlayer } from './types'
 
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
@@ -17,40 +17,43 @@ export const loginRedirect = () => {
   const url = SPOTIFY_AUTH_URL + querystring.stringify({
     response_type: 'token',
     client_id: SPOTIFY_CLIENT_ID,
-    scope: 'user-read-playback-state user-modify-playback-state',
+    scope: 'user-read-playback-state user-modify-playback-state streaming user-read-email user-read-private',
     redirect_uri: SPOTIFY_REDIRECT_URI,
   })
   window.location.replace(url)
-}
-
-const stringifyArtists = (artists: {name: string}[]) => {
-  return artists.map(a => a.name).join(',')
 }
 
 const makeHeader = (token: string) => {
   return { 'Authorization': 'Bearer ' + token }
 }
 
-export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
-  const resp = await axios.get(`${SPOTIFY_BASE_URL}/player/currently-playing`, {
-    headers: makeHeader(token)
-  })
-  const { item, is_playing, progress_ms } = resp?.data || {}
-  if(!item){
-    return null
-  }
-  const { uri, name, artists, album } = item
-  return {
-    paused: !is_playing,
-    progress: progress_ms,
-    track: {
-      uri,
-      name,
-      artist: stringifyArtists(artists),
-      album: album.name,
-      img: album.images[0].url
+export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
+  // ensure spotify loaded
+  for(let i=0; i<10; i++){
+    if((window as any).Spotify !== undefined){
+      break
     }
+    await wait(50)
   }
+
+  const player: SpotifyPlayer = new (window as any).Spotify.Player({
+    name: 'Pass the Aux',
+    getOAuthToken: (cb: any) => { cb(token); }
+  });
+
+  // Error handling
+  player.addListener('initialization_error', ({ message }: any) => { console.error(message); });
+  player.addListener('authentication_error', ({ message }: any) => { console.error(message); });
+  player.addListener('account_error', ({ message }: any) => { console.error(message); });
+  player.addListener('playback_error', ({ message }: any) => { console.error(message); });
+
+  // Connect to the player!
+  player.connect();
+
+  // Choose player as device
+  await setDeviceToPlayer(token)
+
+  return player
 }
 
 export const changeTrack = async (token: string, uri: string, position = 0) => {
@@ -60,6 +63,38 @@ export const changeTrack = async (token: string, uri: string, position = 0) => {
   }, {
     headers: makeHeader(token)
   })
+}
+
+export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> => {
+  const deviceId = await getPlayerId(token, tries)
+  if(deviceId === null) {
+    throw new Error("Could not find Pass the Aux device")
+  }
+  // spotify gets nervous & needs a second to breath
+  await wait(100)
+  await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId] }, {
+    headers: makeHeader(token)
+  })
+}
+
+export const getPlayerId = async (token: string, tries = 5): Promise<string | null> => {
+  let player: Device | undefined
+  for(let i=0; i<tries; i++){
+    const devices = await getDevices(token)
+    player = devices.find(d => d.name === 'Pass the Aux')
+    if(player !== undefined) {
+      break
+    }
+    await wait(500) 
+  }
+  return player === undefined ? null : player.id
+}
+
+export const getDevices = async (token: string): Promise<Device[]> => {
+  const res = await axios.get(`${SPOTIFY_BASE_URL}/player/devices`, {
+    headers: makeHeader(token)
+  })
+  return res?.data?.devices || []
 }
 
 export const pauseTrack = async (token: string) => {
@@ -82,33 +117,6 @@ export const getUserInfo = async (token: string) => {
   }
 }
 
-export class SpotifyListener {
-
-  token: string
-  curr: Track | null
-  running: boolean
-
-  constructor(token: string){
-    this.token = token
-    this.curr = null
-    this.running = false
-  }
-
-  async *start(): AsyncIterable<PlaybackInfo | null> {
-    this.running = true
-
-    while(this.running) {
-      const curr = await getCurr(this.token)
-      yield curr
-      await wait(POLL_INTERVAL)
-    }
-  }
-
-  stop() {
-    this.running = false
-  }
-}
-
 const wait = (time: number) => {
   return new Promise(resolve => {
     setTimeout(resolve, time)
@@ -117,8 +125,11 @@ const wait = (time: number) => {
 
 export default {
   loginRedirect,
-  getCurr,
+  createPlayer,
   changeTrack,
+  setDeviceToPlayer,
+  getPlayerId,
+  getDevices,
   pauseTrack,
   getUserInfo,
 }
