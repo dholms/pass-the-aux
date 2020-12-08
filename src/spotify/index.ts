@@ -56,6 +56,11 @@ export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> 
   }
   // spotify gets nervous & needs a second to breath
   await wait(100)
+  await connectDevice(token, deviceId);
+  (window as any).attemptReconnect = () => connectDevice(token, deviceId)
+}
+
+export const connectDevice = async (token: string, deviceId: string): Promise<void> =>  {
   await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId], play: true }, {
     headers: makeHeader(token)
   })
