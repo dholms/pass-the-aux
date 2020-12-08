@@ -10,16 +10,13 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 class Callback extends React.Component<Props & RouteComponentProps> {
   componentDidMount() {
     // Parse spotify query string that includes token.
-    console.log(window.location)
     const qs = querystring.parse(window.location.search.slice(1));
-    console.log("QS: ", qs)
     if (qs.code && typeof qs.code === "string") {
       this.props.gotUserCode(qs.code);
       if (qs.state) {
-        const redirectTo = JSON.parse(String(qs.state)).redirectToPath;
-        console.log("Redirecting to", redirectTo, qs);
-        const { state, ...rest } = qs;
-        redirectTo && this.props.history.push(redirectTo, rest);
+        const redirectTo = qs.state
+        console.log("Redirecting to", redirectTo);
+        redirectTo && this.props.history.push(redirectTo);
       }else {
         this.props.history.push('/')
       }

@@ -47,6 +47,8 @@ export const loginRedirect = async () => {
   localStorage.setItem('verifier', verifier)
   const challenge = await challengeFromVerifier(verifier)
 
+  const path = window.location.pathname
+
   const url = SPOTIFY_AUTH_URL + querystring.stringify({
     response_type: 'code',
     client_id: SPOTIFY_CLIENT_ID,
@@ -54,6 +56,7 @@ export const loginRedirect = async () => {
     redirect_uri: SPOTIFY_REDIRECT_URI,
     code_challenge: challenge,
     code_challenge_method: 'S256',
+    state: path
   })
   window.location.replace(url)
 }
