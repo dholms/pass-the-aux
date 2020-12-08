@@ -3,15 +3,11 @@ import { push } from 'connected-react-router'
 import { ProcessOpts } from "../types";
 import {
   CREATE_ROOM,
-  JOINED_ROOM,
   CONNECT_TO_ROOM,
   PASS_AUX,
-  joinedRoom,
   memberAdded,
   memberRemoved,
   auxPassed,
-  AUX_PASSED,
-  auxPassedSuccess,
   syncPlayer,
   SYNC_PLAYER,
   trackStatus,

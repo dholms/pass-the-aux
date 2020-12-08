@@ -1,6 +1,6 @@
 import axios from 'axios'
 import querystring from 'querystring'
-import { Device, PlayerState, SpotifyPlayer } from './types'
+import { Device, SpotifyPlayer } from './types'
 
 export const POLL_INTERVAL = 3000
 export const DEBOUNCE_RANGE = 3000
@@ -33,7 +33,7 @@ export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
     if((window as any).Spotify !== undefined){
       break
     }
-    await wait(100)
+    await wait(50)
   }
 
   const player: SpotifyPlayer = new (window as any).Spotify.Player({
@@ -59,28 +59,6 @@ export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
   return player
 }
 
-// export const getCurr = async (token: string): Promise<PlaybackInfo | null> => {
-//   const resp = await axios.get(`${SPOTIFY_BASE_URL}/player/currently-playing`, {
-//     headers: makeHeader(token)
-//   })
-//   const { item, is_playing, progress_ms } = resp?.data || {}
-//   if(!item){
-//     return null
-//   }
-//   const { uri, name, artists, album } = item
-//   return {
-//     paused: !is_playing,
-//     progress: progress_ms,
-//     track: {
-//       uri,
-//       name,
-//       artist: stringifyArtists(artists),
-//       album: album.name,
-//       img: album.images[0].url
-//     }
-//   }
-// }
-
 export const changeTrack = async (token: string, uri: string, position = 0) => {
   await axios.put(`${SPOTIFY_BASE_URL}/player/play`, {
     uris: [uri],
@@ -95,7 +73,8 @@ export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> 
   if(deviceId === null) {
     throw new Error("Could not find Pass the Aux device")
   }
-
+  // spotify gets nervous & needs a second to breath
+  await wait(100)
   await axios.put(`${SPOTIFY_BASE_URL}/player`, { device_ids: [deviceId] }, {
     headers: makeHeader(token)
   })

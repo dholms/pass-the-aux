@@ -1,4 +1,4 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, AUX_PASSED_SUCCESS, TRACK_STATUS, SYNC_PLAYER, AUX_PASSED } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, TRACK_STATUS, SYNC_PLAYER, AUX_PASSED } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
 import { PlayerState, SpotifyPlayer } from '../../spotify/types'

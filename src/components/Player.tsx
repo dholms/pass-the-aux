@@ -8,7 +8,6 @@ import TrackInfo from "./TrackInfo";
 import MemberList from "./MemberList";
 import { connectToRoom } from "../redux/room/actions";
 import { RouteComponentProps } from "react-router-dom";
-import spotify from '../spotify'
 
 class Player extends React.Component<Props, State> {
   componentDidMount(){

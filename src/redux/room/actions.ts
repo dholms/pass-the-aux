@@ -12,7 +12,6 @@ export const JOINED_ROOM = 'JOINED_ROOM'
 
 export const PASS_AUX = 'PASS_AUX'
 export const AUX_PASSED = 'AUX_PASSED'
-export const AUX_PASSED_SUCCESS = 'AUX_PASSED_SUCCESS'
 
 export const UPDATE_TRACK = 'UPDATE_TRACK'
 export const TRACK_STATUS = 'TRACK_STATUS'
@@ -112,20 +111,6 @@ export const auxPassed = (id: string): AuxPassedAction => ({
   }
 })
 
-interface AuxPassedSuccessAction {
-  type: 'AUX_PASSED_SUCCESS'
-  payload: {
-    id: string
-  }
-}
-
-export const auxPassedSuccess = (id: string): AuxPassedSuccessAction => ({
-  type: AUX_PASSED_SUCCESS,
-  payload: {
-    id
-  }
-})
-
 export interface UpdateTrackAction extends Action {
   type: 'UPDATE_TRACK'
   payload: PlayerState
@@ -165,7 +150,6 @@ export type RoomAction
   | JoinedRoomAction
   | PassAuxAction
   | AuxPassedAction
-  | AuxPassedSuccessAction
   | UpdateTrackAction
   | TrackStatusAction
   | SyncPlayerAction
