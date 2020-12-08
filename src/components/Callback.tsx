@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { gotUserToken } from "../redux/user/actions";
+import { gotUserCode } from "../redux/user/actions";
 import { GlobalState } from "../redux/store";
 
 import querystring from "querystring";
@@ -10,10 +10,11 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 class Callback extends React.Component<Props & RouteComponentProps> {
   componentDidMount() {
     // Parse spotify query string that includes token.
-    const qs = querystring.parse(window.location.hash.slice(1));
+    console.log(window.location)
+    const qs = querystring.parse(window.location.search.slice(1));
     console.log("QS: ", qs)
-    if (qs.access_token && typeof qs.access_token === "string") {
-      this.props.gotUserToken(qs.access_token);
+    if (qs.code && typeof qs.code === "string") {
+      this.props.gotUserCode(qs.code);
       if (qs.state) {
         const redirectTo = JSON.parse(String(qs.state)).redirectToPath;
         console.log("Redirecting to", redirectTo, qs);
@@ -31,14 +32,14 @@ class Callback extends React.Component<Props & RouteComponentProps> {
 }
 
 interface Props {
-  gotUserToken: typeof gotUserToken;
+  gotUserCode: typeof gotUserCode;
   history: any;
 }
 
 const mapStateToProps = (state: GlobalState) => ({});
 
 const mapDispatchToProps = {
-  gotUserToken,
+  gotUserCode,
 };
 
 export default connect(

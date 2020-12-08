@@ -75,3 +75,11 @@ export type Device = {
   type: string
   volume_percent: number
 }
+
+export type TokenPayload = {
+  access_token: string
+  expires_in: number
+  refresh_token: string
+  scope: string
+  token_type: string
+}
