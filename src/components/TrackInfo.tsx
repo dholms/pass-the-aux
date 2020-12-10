@@ -8,7 +8,7 @@ import { PlayerState } from "../spotify/types";
 
 import Typography from "@material-ui/core/Typography";
 
-import emptyAlbum from "../assets/emptyAlbum.png";
+import emptyAlbum from "../assets/emptyAlbum.jpg";
 
 class TrackInfo extends React.Component<Props, State> {
   render() {
