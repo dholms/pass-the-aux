@@ -4,6 +4,7 @@ import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import { GlobalState } from '../redux/store'
 import { createRoom, connectToRoom } from '../redux/room/actions'
+import { hadInteraction } from '../redux/user/actions'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -18,6 +19,7 @@ class RoomButtons extends React.Component<Props, State> {
   }
 
   createRoom = () => {
+    this.props.hadInteraction()
     this.props.createRoom()
   }
 
@@ -28,6 +30,7 @@ class RoomButtons extends React.Component<Props, State> {
 
   connect = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
+    this.props.hadInteraction()
     this.props.connectToRoom(this.state.roomname)
   }
   
@@ -39,7 +42,7 @@ class RoomButtons extends React.Component<Props, State> {
           Create a Room
         </Typography>
         <Button
-          onClick={this.props.createRoom}
+          onClick={this.createRoom}
           variant='contained'
           color='primary'
         >
@@ -70,6 +73,7 @@ class RoomButtons extends React.Component<Props, State> {
 interface Props {
   createRoom: typeof createRoom
   connectToRoom: typeof connectToRoom
+  hadInteraction: typeof hadInteraction
   classes: any
 }
 
@@ -82,6 +86,7 @@ const mapStateToProps = (state: GlobalState) => ({ })
 const mapDispatchToProps = {
   createRoom,
   connectToRoom,
+  hadInteraction,
 }
 
 

@@ -1,4 +1,4 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, TRACK_STATUS, SYNC_PLAYER, AUX_PASSED } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, TRACK_STATUS, AUX_PASSED, JOINED_ROOM } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
 import { PlayerState, SpotifyPlayer } from '../../spotify/types'
@@ -26,7 +26,7 @@ export const defaultState = {
 export default (state: RoomState = defaultState, action: RoomAction) => {
   switch(action.type) {
 
-    case SYNC_PLAYER:
+    case JOINED_ROOM:
       const { room, player } = action.payload
       const { members, leader, name, socket } = room
       const userId = socket.id

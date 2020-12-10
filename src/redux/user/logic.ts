@@ -26,7 +26,7 @@ const gotUserTokenLogic = createLogic({
     const { name, image }  = await spotify.getUserInfo(token)
     dispatch(userLoggedIn(token, name, image))
 
-    const REFRESH_INTERVAL = 1000*60*55 // 55 min
+    const REFRESH_INTERVAL = 1000*60*45 // 45 min
     setTimeout(() => {
       dispatch(refreshUserToken())
     }, REFRESH_INTERVAL)

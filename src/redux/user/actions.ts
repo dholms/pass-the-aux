@@ -3,6 +3,7 @@ export const GOT_USER_TOKEN = 'GOT_USER_TOKEN'
 export const REFRESH_USER_TOKEN = 'REFRESH_USER_TOKEN'
 export const USER_LOGGED_IN = 'USER_LOGGED_IN'
 export const ATTEMPTED_LOGIN = 'ATTEMPTED_LOGIN'
+export const HAD_INTERACTION = 'HAD_INTERACTION'
 
 interface GotUserCodeAction {
   type: 'GOT_USER_CODE'
@@ -73,6 +74,17 @@ export const attemptedLogin = (): AttemptedLoginAction => ({
   payload: { }
 })
 
+interface HadInteractionAction {
+  type: 'HAD_INTERACTION'
+  payload: { }
+}
+
+export const hadInteraction = (): HadInteractionAction => ({
+  type: HAD_INTERACTION,
+  payload: { }
+})
+
+
 
 
 export type UserAction 
@@ -81,3 +93,4 @@ export type UserAction
   | RefreshUserTokenAction
   | UserLoggedInAction
   | AttemptedLoginAction
+  | HadInteractionAction

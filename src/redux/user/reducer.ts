@@ -1,4 +1,4 @@
-import { ATTEMPTED_LOGIN, GOT_USER_TOKEN, UserAction, USER_LOGGED_IN } from "./actions";
+import { ATTEMPTED_LOGIN, GOT_USER_TOKEN, UserAction, USER_LOGGED_IN, HAD_INTERACTION } from "./actions";
 
 export type UserState = {
   token: string | null;
@@ -7,6 +7,7 @@ export type UserState = {
   image: string | null;
   userLoaded: boolean
   attemptedLogin: true
+  hasInteracted: boolean
 };
 
 export const defaultState = {
@@ -15,7 +16,8 @@ export const defaultState = {
   name: "Noname",
   image: null,
   userLoaded: false,
-  attemptedLogin: false
+  attemptedLogin: false,
+  hasInteracted: false
 };
 
 export default (state = defaultState, action: UserAction) => {
@@ -46,6 +48,14 @@ export default (state = defaultState, action: UserAction) => {
         token,
         refresh
       }
+    }
+
+    case HAD_INTERACTION: {
+      return {
+        ...state,
+        hasInteracted: true
+      }
+
     }
 
     default:

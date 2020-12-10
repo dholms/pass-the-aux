@@ -15,6 +15,7 @@ export const AUX_PASSED = 'AUX_PASSED'
 
 export const UPDATE_TRACK = 'UPDATE_TRACK'
 export const TRACK_STATUS = 'TRACK_STATUS'
+
 export const SYNC_PLAYER = 'SYNC_PLAYER'
 
 interface MemberAddedAction {
@@ -71,15 +72,17 @@ export const connectToRoom = (roomname: string): ConnectToRoomAction => ({
 
 interface JoinedRoomAction {
   type: 'JOINED_ROOM'
-  payload: {
-    room: RoomClient
+  payload: { 
+    room: RoomClient,
+    player: SpotifyPlayer
   }
 }
 
-export const joinedRoom = (room: RoomClient): JoinedRoomAction => ({
+export const joinedRoom = (room: RoomClient, player: SpotifyPlayer): JoinedRoomAction => ({
   type: JOINED_ROOM,
   payload: {
-    room
+    room,
+    player
   }
 })
 
@@ -133,12 +136,12 @@ export const trackStatus = (payload: PlayerState): TrackStatusAction => ({
 
 export interface SyncPlayerAction extends Action {
   type: 'SYNC_PLAYER'
-  payload: { room: RoomClient, player: SpotifyPlayer }
+  payload: {}
 }
 
-export const syncPlayer = (room: RoomClient, player: SpotifyPlayer): SyncPlayerAction => ({
+export const syncPlayer = (): SyncPlayerAction => ({
   type: SYNC_PLAYER,
-  payload: { room, player }
+  payload: {}
 })
 
 

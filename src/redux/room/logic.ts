@@ -8,11 +8,11 @@ import {
   memberAdded,
   memberRemoved,
   auxPassed,
-  syncPlayer,
   SYNC_PLAYER,
   trackStatus,
   updateTrack,
   UPDATE_TRACK,
+  joinedRoom,
 } from "./actions";
 import RoomClient from "../../room/client";
 import { PlayerState } from "../../spotify/types";
@@ -29,7 +29,7 @@ const createRoomLogic = createLogic({
     }
     const player = await spotify.createPlayer(() => getState().user.token || '')
     const room = await RoomClient.create(name, image);
-    dispatch(syncPlayer(room, player));
+    dispatch(joinedRoom(room, player));
     dispatch(push(`/${room.name}`))
   },
 });
@@ -55,7 +55,7 @@ const connectToRoomLogic = createLogic({
       const player = await spotify.createPlayer(() => getState().user.token || '')
       const room = await RoomClient.connect(roomname, username);
 
-      dispatch(syncPlayer(room, player))
+      dispatch(joinedRoom(room, player))
       dispatch(push(`/${roomname}`))
     } catch (e) {
       console.warn(e);
@@ -69,7 +69,15 @@ const syncPlayerLogic = createLogic({
   type: SYNC_PLAYER,
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { room, player } = action.payload;
+    const { room, player } = getState().room;
+    if(room === null) throw new Error("Room not connected")
+    if(player === null) throw new Error("Player not connected")
+
+    const curState = await player.getCurrentState()
+    if(curState) {
+      dispatch(updateTrack(curState))
+    }
+
     player.addListener('player_state_changed', (playerState: PlayerState) => {
       const { leader, room } = getState().room
       if(room === null){
@@ -149,22 +157,6 @@ const passAuxLogic = createLogic({
     done();
   },
 });
-
-// const auxPassedLogic = createLogic({
-//   type: AUX_PASSED,
-//   async process({ getState, action }: ProcessOpts, dispatch, done) {
-//     // const { userId, leader } = getState().room;
-//     const newLeader = action.payload.id;
-//     // if (userId === leader) {
-//       // dispatch(stopListening());
-//     // }
-//     // if (userId === newLeader) {
-//     //   dispatch(startListening());
-//     // }
-//     dispatch(auxPassedSuccess(newLeader));
-//     done();
-//   },
-// });
 
 export default [
   createRoomLogic,

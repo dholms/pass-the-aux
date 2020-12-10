@@ -57,7 +57,7 @@ class HelpButton extends React.Component<Props, State> {
                 Nope. This is a digital aux cord. Does the aux cord in your car of those features?
               </Question>
               <Question question='Are you mining my data and sending it to Zuckerberg for easy cash?'>
-                Nope. Everything is client side, and the code is open source so you can check it for anything spooky 👻
+                Nope. Everything is client side, and the code is open source so you can check it for anything spooky
               </Question>
             </CardContent>
           </Card>
