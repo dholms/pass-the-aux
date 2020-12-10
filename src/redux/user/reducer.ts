@@ -1,36 +1,52 @@
-import { ATTEMPTED_LOGIN, UserAction, USER_LOGGED_IN } from "./actions";
+import { ATTEMPTED_LOGIN, GOT_USER_TOKEN, UserAction, USER_LOGGED_IN } from "./actions";
 
 export type UserState = {
   token: string | null;
+  refresh: string | null;
   name: string;
   image: string | null;
+  userLoaded: boolean
   attemptedLogin: true
 };
 
 export const defaultState = {
   token: null,
+  refresh: null,
   name: "Noname",
   image: null,
+  userLoaded: false,
   attemptedLogin: false
 };
 
 export default (state = defaultState, action: UserAction) => {
   switch (action.type) {
-    case ATTEMPTED_LOGIN:
+    case ATTEMPTED_LOGIN: {
       return {
         ...state,
         attemptedLogin: true
       }
+    }
 
-    case USER_LOGGED_IN:
+    case USER_LOGGED_IN: {
       const { token, name, image } = action.payload;
       return {
         ...state,
         token,
         name,
         image,
-        attemptedLogin: true
+        attemptedLogin: true,
+        userLoaded: true
       };
+    }
+ 
+    case GOT_USER_TOKEN: {
+      const { token, refresh } = action.payload
+      return {
+        ...state,
+        token,
+        refresh
+      }
+    }
 
     default:
       return state;

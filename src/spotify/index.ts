@@ -11,7 +11,7 @@ const makeHeader = (token: string) => {
   return { 'Authorization': 'Bearer ' + token }
 }
 
-export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
+export const createPlayer = async (getToken: () => string): Promise<SpotifyPlayer> => {
   // ensure spotify loaded
   for(let i=0; i<10; i++){
     if((window as any).Spotify !== undefined){
@@ -22,7 +22,7 @@ export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
 
   const player: SpotifyPlayer = new (window as any).Spotify.Player({
     name: 'Pass the Aux',
-    getOAuthToken: (cb: any) => { cb(token); }
+    getOAuthToken: (cb: any) => { cb(getToken()); }
   });
 
   // Error handling
@@ -35,7 +35,7 @@ export const createPlayer = async (token: string): Promise<SpotifyPlayer> => {
   player.connect();
 
   // Choose player as device
-  await setDeviceToPlayer(token)
+  await setDeviceToPlayer(getToken() || '')
 
   return player
 }

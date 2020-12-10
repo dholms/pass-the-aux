@@ -24,7 +24,8 @@ class MemberList extends React.Component<Props> {
 
   render() {
     const { roomname, members, leader, userId, classes } = this.props
-    const link = `${window.location.origin}/${roomname}`.replace('www.', '')
+    const link = `${window.location.origin}/${roomname || ''}`.replace('www.', '')
+    console.log(link)
     return (
       <div>
         <Card className={classes.card}>

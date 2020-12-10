@@ -12,11 +12,22 @@ import { RouteComponentProps } from "react-router-dom";
 class Player extends React.Component<Props, State> {
   componentDidMount(){
     const { roomId } = this.props.match.params
-    roomId && this.props.connectToRoom(roomId)
+    const connectAfterAuth = () => {
+      if(this.props.userLoaded) {
+        this.props.connectToRoom(roomId)
+      } else {
+        setTimeout(connectAfterAuth, 50)
+      }
+    }
+    connectAfterAuth()
   }
 
   render() {
-    const { classes } = this.props;
+    const { token, classes } = this.props;
+    if(!token) {
+      return null
+    }
+
     return (
       <div className={classes.main}>
         <TrackInfo />
@@ -32,6 +43,7 @@ interface MatchParams {
 
 interface Props extends RouteComponentProps<MatchParams>{
   token: string | null
+  userLoaded: boolean
   connectToRoom: typeof connectToRoom;
   classes: any;
 }
@@ -39,7 +51,8 @@ interface Props extends RouteComponentProps<MatchParams>{
 interface State {}
 
 const mapStateToProps = (state: GlobalState) => ({ 
-  token: state.user.token
+  token: state.user.token,
+  userLoaded: state.user.userLoaded
 });
 
 const mapDispatchToProps = {

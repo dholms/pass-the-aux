@@ -21,21 +21,22 @@ import spotify, { DEBOUNCE_RANGE } from "../../spotify";
 
 const createRoomLogic = createLogic({
   type: CREATE_ROOM,
+  warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { name, image, token } = getState().user;
     if(token === null){
       throw new Error("No token")
     }
-    const player = await spotify.createPlayer(token)
+    const player = await spotify.createPlayer(() => getState().user.token || '')
     const room = await RoomClient.create(name, image);
     dispatch(syncPlayer(room, player));
     dispatch(push(`/${room.name}`))
-    done();
   },
 });
 
 const connectToRoomLogic = createLogic({
   type: CONNECT_TO_ROOM,
+  warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
     const { roomname } = action.payload;
     const username = getState().user.name;
@@ -51,11 +52,11 @@ const connectToRoomLogic = createLogic({
       if(token === null){
         throw new Error("No token")
       }
-      const player = await spotify.createPlayer(token)
+      const player = await spotify.createPlayer(() => getState().user.token || '')
       const room = await RoomClient.connect(roomname, username);
 
       dispatch(syncPlayer(room, player))
-      done();
+      dispatch(push(`/${roomname}`))
     } catch (e) {
       console.warn(e);
       // Send them back to the start

@@ -22,13 +22,15 @@ interface GotUserTokenAction {
   type: 'GOT_USER_TOKEN'
   payload: {
     token: string
+    refresh: string
   }
 }
 
-export const gotUserToken = (token: string): GotUserTokenAction => ({
+export const gotUserToken = (token: string, refresh: string): GotUserTokenAction => ({
   type: GOT_USER_TOKEN,
   payload: {
-    token
+    token,
+    refresh
   }
 })
 
