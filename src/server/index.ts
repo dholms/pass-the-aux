@@ -61,12 +61,13 @@ io.on('connection', (client: Socket) => {
   client.on('connect-to-room', (data: ConnectToRoomMsg) => {
     const { username, image, roomname } = data
     let room = rooms[roomname]
-    if(room === undefined){
-      room = new Room(roomname, username, image, client, () => deleteRoom(roomname))
-      rooms[roomname] = room
-    }
     try {
-      room.addMember(username, image, client)
+      if(room === undefined){
+        room = new Room(roomname, username, image, client, () => deleteRoom(roomname))
+        rooms[roomname] = room
+      }else {
+        room.addMember(username, image, client)
+      }
       client.emit('connect-to-room-success', room.data())
     } catch(err) {
       client.emit('connect-to-room-failed', err.toString())

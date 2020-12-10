@@ -57,9 +57,10 @@ const connectToRoomLogic = createLogic({
       dispatch(joinedRoom(room))
       dispatch(push(`/${roomname}`))
     } catch (e) {
+      console.log("HERE: ", e)
       console.warn(e);
       // Send them back to the start
-      dispatch(push('/'))
+      // dispatch(push('/'))
     }
   },
 });
@@ -75,7 +76,9 @@ const syncPlayerLogic = createLogic({
     dispatch(createdPlayer(player))
 
     if(room.lastUpdate !== null) {
-      dispatch(updateTrack(room.lastUpdate))
+      if (room.socket.id !== room.leader) {
+        dispatch(updateTrack(room.lastUpdate))
+      }
     }
 
     player.addListener('player_state_changed', (playerState: PlayerState) => {
