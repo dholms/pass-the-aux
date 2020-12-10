@@ -23,8 +23,8 @@ class Player extends React.Component<Props, State> {
   }
 
   render() {
-    const { token, classes } = this.props;
-    if(!token) {
+    const { userLoaded, roomLoaded, classes } = this.props;
+    if(!userLoaded || !roomLoaded) {
       return null
     }
 
@@ -44,6 +44,7 @@ interface MatchParams {
 interface Props extends RouteComponentProps<MatchParams>{
   token: string | null
   userLoaded: boolean
+  roomLoaded: boolean
   connectToRoom: typeof connectToRoom;
   classes: any;
 }
@@ -52,7 +53,8 @@ interface State {}
 
 const mapStateToProps = (state: GlobalState) => ({ 
   token: state.user.token,
-  userLoaded: state.user.userLoaded
+  userLoaded: state.user.userLoaded,
+  roomLoaded: state.room.room !== null
 });
 
 const mapDispatchToProps = {

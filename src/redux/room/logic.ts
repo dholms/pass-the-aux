@@ -60,7 +60,7 @@ const connectToRoomLogic = createLogic({
     } catch (e) {
       console.warn(e);
       // Send them back to the start
-      window.location.href = window.location.origin;
+      dispatch(push('/'))
     }
   },
 });
