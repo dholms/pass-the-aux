@@ -15,6 +15,7 @@ export default class RoomClient {
   name: string
   members: Member[]
   leader: string
+  lastUpdate: PlayerState | null = null
   onTrackUpdate: ((data: PlayerState) => void) | null = null
   onMemberAdded: ((member: Member) => void) | null = null
   onMemberRemoved: ((id: string) => void) | null = null
@@ -62,6 +63,7 @@ export default class RoomClient {
 
   respondToUpdates() {
     this.socket.on('track-update', (data: PlayerState) => {
+      this.lastUpdate = data
       if(this.onTrackUpdate !== null) {
         this.onTrackUpdate(data)
       }

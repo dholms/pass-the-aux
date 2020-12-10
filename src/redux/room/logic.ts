@@ -13,6 +13,7 @@ import {
   updateTrack,
   UPDATE_TRACK,
   joinedRoom,
+  createdPlayer,
 } from "./actions";
 import RoomClient from "../../room/client";
 import { PlayerState } from "../../spotify/types";
@@ -27,9 +28,8 @@ const createRoomLogic = createLogic({
     if(token === null){
       throw new Error("No token")
     }
-    const player = await spotify.createPlayer(() => getState().user.token || '')
     const room = await RoomClient.create(name, image);
-    dispatch(joinedRoom(room, player));
+    dispatch(joinedRoom(room));
     dispatch(push(`/${room.name}`))
   },
 });
@@ -52,10 +52,9 @@ const connectToRoomLogic = createLogic({
       if(token === null){
         throw new Error("No token")
       }
-      const player = await spotify.createPlayer(() => getState().user.token || '')
       const room = await RoomClient.connect(roomname, username);
 
-      dispatch(joinedRoom(room, player))
+      dispatch(joinedRoom(room))
       dispatch(push(`/${roomname}`))
     } catch (e) {
       console.warn(e);
@@ -69,13 +68,14 @@ const syncPlayerLogic = createLogic({
   type: SYNC_PLAYER,
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { room, player } = getState().room;
+    const { room } = getState().room;
     if(room === null) throw new Error("Room not connected")
-    if(player === null) throw new Error("Player not connected")
 
-    const curState = await player.getCurrentState()
-    if(curState) {
-      dispatch(updateTrack(curState))
+    const player = await spotify.createPlayer(() => getState().user.token || '')
+    dispatch(createdPlayer(player))
+
+    if(room.lastUpdate !== null) {
+      dispatch(updateTrack(room.lastUpdate))
     }
 
     player.addListener('player_state_changed', (playerState: PlayerState) => {
