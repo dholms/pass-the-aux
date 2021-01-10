@@ -8,7 +8,9 @@ import background from "../assets/background.jpg";
 const styles = () => {
   return createStyles({
     main: {
-      backgroundImage: `url('${background}')`,
+      background: `url('${background}') no-repeat center center fixed`,
+      backgroundSize: 'cover',
+      // backgroundImage: `url('${background}')`,
       height: "100%",
       width: "100%",
     },
