@@ -88,6 +88,8 @@ const syncPlayerLogic = createLogic({
       });
     }
 
+    player.resume()
+
     if(room.lastUpdate !== null) {
       if (room.socket.id !== room.leader) {
         dispatch(updateTrack(room.lastUpdate))
