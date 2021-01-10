@@ -68,29 +68,31 @@ const syncPlayerLogic = createLogic({
   type: SYNC_PLAYER,
   warnTimeout: 0,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
-    const { room } = getState().room;
+    let { room, player } = getState().room;
     if(room === null) throw new Error("Room not connected")
 
-    const player = await spotify.createPlayer(() => getState().user.token || '')
-    dispatch(createdPlayer(player))
+    if(!player) {
+      player = await spotify.createPlayer(() => getState().user.token || '')
+      dispatch(createdPlayer(player))
+
+      player.addListener('player_state_changed', (playerState: PlayerState) => {
+        const { leader, room } = getState().room
+        if(room === null){
+          // TODO: Better error handling here
+          throw new Error("Not connect to room")
+        }
+        if(leader === room.socket.id) {
+          room.updateTrack(playerState)
+        }
+        dispatch(trackStatus(playerState))
+      });
+    }
 
     if(room.lastUpdate !== null) {
       if (room.socket.id !== room.leader) {
         dispatch(updateTrack(room.lastUpdate))
       }
     }
-
-    player.addListener('player_state_changed', (playerState: PlayerState) => {
-      const { leader, room } = getState().room
-      if(room === null){
-        // TODO: Better error handling here
-        throw new Error("Not connect to room")
-      }
-      if(leader === room.socket.id) {
-        room.updateTrack(playerState)
-      }
-      dispatch(trackStatus(playerState))
-    });
 
     room.onTrackUpdate = (data: PlayerState) => {
       const roomState = getState().room;
@@ -101,7 +103,7 @@ const syncPlayerLogic = createLogic({
     room.onMemberAdded = async (member: Member) => {
       dispatch(memberAdded(member))
       const playerState = await getState().room.player?.getCurrentState()
-      if(playerState) {
+      if(playerState && room) {
         room.updateTrack(playerState)
       }
     }

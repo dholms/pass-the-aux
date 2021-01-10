@@ -41,6 +41,7 @@ class Player extends React.Component<Props, State> {
     const { userLoaded, roomLoaded, hadInteraction } = this.props
     if(userLoaded && roomLoaded && hadInteraction && !this.state.isPlaying) {
       this.props.syncPlayer()
+      this.setState({ isPlaying: true })
     }
   }
 
