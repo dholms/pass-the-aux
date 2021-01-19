@@ -8,6 +8,8 @@ import { PlayerState } from "../spotify/types";
 
 import Typography from "@material-ui/core/Typography";
 
+import Volume from './Volume';
+
 import emptyAlbum from "../assets/emptyAlbum.jpg";
 
 class TrackInfo extends React.Component<Props, State> {
@@ -32,6 +34,7 @@ class TrackInfo extends React.Component<Props, State> {
         <Typography>
           <em>{artist} - {album}</em>
         </Typography>
+        <Volume />
       </div>
     )
   }

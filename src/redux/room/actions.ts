@@ -19,6 +19,8 @@ export const TRACK_STATUS = 'TRACK_STATUS'
 export const SYNC_PLAYER = 'SYNC_PLAYER'
 export const CREATED_PLAYER = 'CREATED_PLAYER'
 
+export const SET_VOLUME = 'SET_VOLUME'
+
 interface MemberAddedAction {
   type: 'MEMBER_ADDED'
   payload: {
@@ -157,6 +159,21 @@ export const createdPlayer = (player: SpotifyPlayer): CreatedPlayerAction => ({
   }
 })
 
+export interface SetVolumeAction extends Action {
+  type: 'SET_VOLUME'
+  payload: {
+    volume: number
+  }
+}
+
+export const setVolume = (volume: number): SetVolumeAction => ({
+  type: SET_VOLUME,
+  payload: {
+    volume
+  }
+})
+
+
 
 
 export type RoomAction 
@@ -171,3 +188,4 @@ export type RoomAction
   | TrackStatusAction
   | SyncPlayerAction
   | CreatedPlayerAction
+  | SetVolumeAction

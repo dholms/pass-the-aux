@@ -18,6 +18,7 @@ export interface SpotifyPlayer {
   connect: () => Promise<boolean>
   pause: () => Promise<boolean>
   resume: () => Promise<boolean>
+  setVolume: (volume: number) => Promise<void>
 }
 
 export type PlayerState = {

@@ -1,4 +1,4 @@
-import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, TRACK_STATUS, AUX_PASSED, JOINED_ROOM, CREATED_PLAYER } from './actions'
+import { RoomAction, MEMBER_ADDED, MEMBER_REMOVED, TRACK_STATUS, AUX_PASSED, JOINED_ROOM, CREATED_PLAYER, SET_VOLUME } from './actions'
 import RoomClient from '../../room/client'
 import { Member } from '../../room/types'
 import { PlayerState, SpotifyPlayer } from '../../spotify/types'
@@ -11,6 +11,7 @@ export type RoomState = {
   room: RoomClient | null
   playerState: PlayerState | null
   player: SpotifyPlayer | null
+  volume: number
 }
 
 export const defaultState = {
@@ -21,6 +22,7 @@ export const defaultState = {
   room: null,
   playerState: null,
   player: null,
+  volume: 0,
 }
 
 export default (state: RoomState = defaultState, action: RoomAction) => {
@@ -73,6 +75,13 @@ export default (state: RoomState = defaultState, action: RoomAction) => {
         ...state,
         playerState
       }
+
+    case SET_VOLUME: {
+      return {
+        ...state,
+        volume: action.payload.volume
+      }
+    }
 
     default:
       return state

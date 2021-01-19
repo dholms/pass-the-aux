@@ -14,6 +14,8 @@ import {
   UPDATE_TRACK,
   joinedRoom,
   createdPlayer,
+  SET_VOLUME,
+  setVolume,
 } from "./actions";
 import RoomClient from "../../room/client";
 import { PlayerState } from "../../spotify/types";
@@ -74,6 +76,8 @@ const syncPlayerLogic = createLogic({
     if(!player) {
       player = await spotify.createPlayer(() => getState().user.token || '')
       dispatch(createdPlayer(player))
+
+      dispatch(setVolume(25))
 
       player.addListener('player_state_changed', (playerState: PlayerState) => {
         const { leader, room } = getState().room
@@ -150,7 +154,6 @@ const updateTrackLogic = createLogic({
 });
 
 
-
 const passAuxLogic = createLogic({
   type: PASS_AUX,
   async process({ getState, action }: ProcessOpts, dispatch, done) {
@@ -164,10 +167,25 @@ const passAuxLogic = createLogic({
   },
 });
 
+
+const setVolumeLogic = createLogic({
+  type: SET_VOLUME,
+  async process({ getState, action }: ProcessOpts, dispatch, done) {
+    const { volume } = action.payload;
+    const player = getState().room.player;
+    if (player) {
+      player.setVolume(volume/100)
+    }
+    done();
+  },
+});
+
+
 export default [
   createRoomLogic,
   connectToRoomLogic,
   syncPlayerLogic,
   updateTrackLogic,
   passAuxLogic,
+  setVolumeLogic,
 ];
