@@ -21,15 +21,6 @@ class Player extends React.Component<Props, State> {
   }
 
   componentDidMount(){
-    const { roomId } = this.props.match.params
-    const connectAfterAuth = () => {
-      if(this.props.userLoaded) {
-        this.props.connectToRoom(roomId)
-      } else {
-        setTimeout(connectAfterAuth, 50)
-      }
-    }
-    connectAfterAuth()
     this.checkSync()
   }
 
@@ -37,8 +28,15 @@ class Player extends React.Component<Props, State> {
     this.checkSync()
   }
 
+
   checkSync() {
-    const { userLoaded, roomLoaded, hadInteraction } = this.props
+    const { roomId } = this.props.match.params
+    const { userLoaded, roomLoaded, hadInteraction, currRoom, connecting } = this.props
+
+    if(userLoaded && roomId !== currRoom && !connecting) {
+      this.props.connectToRoom(roomId)
+    }
+
     if(userLoaded && roomLoaded && hadInteraction && !this.state.isPlaying) {
       this.props.syncPlayer()
       this.setState({ isPlaying: true })
@@ -87,6 +85,8 @@ interface Props extends RouteComponentProps<MatchParams>{
   userLoaded: boolean
   roomLoaded: boolean
   hasInteracted: boolean
+  connecting: boolean
+  currRoom: string | null
   connectToRoom: typeof connectToRoom;
   hadInteraction: typeof hadInteraction;
   syncPlayer: typeof syncPlayer;
@@ -101,7 +101,8 @@ const mapStateToProps = (state: GlobalState) => ({
   token: state.user.token,
   userLoaded: state.user.userLoaded,
   roomLoaded: state.room.room !== null,
-  hasInteracted: state.user.hasInteracted
+  hasInteracted: state.user.hasInteracted,
+  currRoom: state.room.name,
 });
 
 const mapDispatchToProps = {

@@ -74,7 +74,10 @@ const syncPlayerLogic = createLogic({
     if(room === null) throw new Error("Room not connected")
 
     if(!player) {
-      player = await spotify.createPlayer(() => getState().user.token || '')
+      player = await spotify.createPlayer(() => {
+        const token = getState().user.token || ''
+        return token
+      })
       dispatch(createdPlayer(player))
 
       dispatch(setVolume(25))
