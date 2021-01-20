@@ -174,7 +174,7 @@ const setVolumeLogic = createLogic({
     const { volume } = action.payload;
     const player = getState().room.player;
     if (player) {
-      player.setVolume(volume/100)
+      player.setVolume(Math.pow(volume/100, 1.75))
     }
     done();
   },
