@@ -174,6 +174,7 @@ const setVolumeLogic = createLogic({
     const { volume } = action.payload;
     const player = getState().room.player;
     if (player) {
+      // browser is much louder than spotify so we convert volume to an exponential curve for more control at lower volumes
       player.setVolume(Math.pow(volume/100, 1.75))
     }
     done();
