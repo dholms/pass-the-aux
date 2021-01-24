@@ -49,7 +49,7 @@ export const changeTrack = async (token: string, uri: string, position = 0) => {
   })
 }
 
-export const setDeviceToPlayer = async(token: string, tries = 5): Promise<void> => {
+export const setDeviceToPlayer = async(token: string, tries = 10): Promise<void> => {
   const deviceId = await getPlayerId(token, tries)
   if(deviceId === null) {
     throw new Error("Could not find Pass the Aux device")
