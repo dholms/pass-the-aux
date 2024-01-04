@@ -2,8 +2,6 @@
 
 Sync spotify between devices & listen to music with friends 🎧
 
-[Check it out!](https://passtheaux.live)
-
 ## Couple notes
 Spotify all happens client side. The server is just a websockets relay for sending messages between peers.
 
